@@ -82,6 +82,23 @@ when one of them lights, say so and it gets verified.
   K.O. II / サンプラー / "128 MB SAMPLER COMPOSER" label panel, and the
   speaker grille.
 
+## Content library integration (ko2-content-library.md)
+
+All 77 Stuck entries and 32 Learn lessons integrated. Two corrections were
+made against the current official guide during integration:
+
+- **Overwrite recording**: the library said `RECORD → ERASE → +`; the
+  guide documents overwrite mode as **RECORD + ERASE + PLAY** — the
+  guide's version is used throughout.
+- **BLE / Bluetooth MIDI**: the library implied built-in wireless MIDI.
+  The EP-133 has **no built-in Bluetooth** — BLE MIDI requires a
+  third-party adapter (e.g. CME WIDI K.O.II). Sync entries corrected.
+
+Carried through with the library's own caveat intact: the backup/restore
+entry notes the method has evolved across firmware and should be confirmed
+in the official guide. Items tagged as concepts are grouped under a
+"Concepts · general guidance" header, framed as practice, not device docs.
+
 ## Still open
 
 - **E.10** — grouped with E.11/E.12 as a file-system error; E.11/E.12 are

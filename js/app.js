@@ -73,24 +73,63 @@ function renderCombos(){
 }
 renderCombos();
 
-/* ---- recipes ---- */
-const rl=document.getElementById('recipe-list');
-RECIPES.forEach((r,i)=>{
-  const el=document.createElement('div');el.className='recipe';
-  const steps=r.steps.map((s,j)=>`<div class="step"><div class="sn">${j+1}</div><div class="sx">${s[0]}</div></div>`).join('');
-  el.innerHTML=`<button aria-expanded="false"><span class="rnum">${String(i+1).padStart(2,'0')}</span><span><span class="rt">${r.t}</span><div class="rs">${r.s}</div></span><span class="caret">›</span></button><div class="steps">${steps}<div class="tip">💡&nbsp;<div>${r.tip}</div></div></div>`;
-  el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
-  rl.appendChild(el);
-});
+/* ---- content formatter: [KEY] → key chip, **x** → bold ---- */
+const FMT=s=>s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]/g,'<span class="cmd">$1</span>');
 
-/* ---- fixes ---- */
-const fl=document.getElementById('fix-list');
-FIXES.forEach(f=>{
-  const el=document.createElement('div');el.className='fix';
-  el.innerHTML=`<button aria-expanded="false"><span>${f.p}</span><span class="caret">›</span></button><div class="body"><div class="cause">${f.c}</div><div class="do">${f.d}</div></div>`;
-  el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
-  fl.appendChild(el);
+/* ---- learn: 32 lessons, level filter + search ---- */
+const LEVELS=['Basics','Core','Advanced'];
+let lvlFilter='All';
+const rl=document.getElementById('recipe-list'),lq=document.getElementById('lq'),lchips=document.getElementById('lchips');
+['All',...LEVELS].forEach(lv=>{
+  const b=document.createElement('button');b.className='chip'+(lv==='All'?' on':'');b.textContent=lv;
+  b.addEventListener('click',()=>{lvlFilter=lv;lchips.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));renderRecipes();});
+  lchips.appendChild(b);
 });
+lq.addEventListener('input',renderRecipes);
+function renderRecipes(){
+  const q=lq.value.trim().toLowerCase();
+  rl.innerHTML='';
+  let shown=0,curLevel='';
+  RECIPES.forEach((r,i)=>{
+    if(lvlFilter!=='All'&&r.level!==lvlFilter)return;
+    if(q&&!((r.level+' '+r.cat+' '+r.t+' '+r.s+' '+r.steps.join(' ')+' '+r.tip).toLowerCase().includes(q)))return;
+    if(r.level!==curLevel){curLevel=r.level;const h=document.createElement('div');h.className='cathead';h.textContent=r.level;rl.appendChild(h);}
+    const el=document.createElement('div');el.className='recipe';
+    const steps=r.steps.map((s,j)=>`<div class="step"><div class="sn">${j+1}</div><div class="sx">${FMT(s)}</div></div>`).join('');
+    el.innerHTML=`<button aria-expanded="false"><span class="rnum">${String(i+1).padStart(2,'0')}</span><span><span class="rt">${r.t}</span><div class="rs"><span class="rcat">${r.cat}</span> · ${r.s}</div></span><span class="caret">›</span></button><div class="steps">${steps}<div class="tip">💡&nbsp;<div>${FMT(r.tip)}</div></div></div>`;
+    el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
+    rl.appendChild(el);shown++;
+  });
+  if(!shown)rl.innerHTML=`<div class="empty">Nothing matches "${lq.value}". Try a plainer word — a button name, or what you want to do.</div>`;
+}
+renderRecipes();
+
+/* ---- stuck: 77 Q&A, category filter + search ---- */
+const fcats=[...new Set(FIXES.map(f=>f.cat))];
+let fixFilter='All';
+const fl=document.getElementById('fix-list'),fq=document.getElementById('fq'),fchips=document.getElementById('fchips');
+['All',...fcats].forEach(cat=>{
+  const b=document.createElement('button');b.className='chip'+(cat==='All'?' on':'');b.textContent=cat;
+  b.addEventListener('click',()=>{fixFilter=cat;fchips.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));renderFixes();});
+  fchips.appendChild(b);
+});
+fq.addEventListener('input',renderFixes);
+function renderFixes(){
+  const q=fq.value.trim().toLowerCase();
+  fl.innerHTML='';
+  let shown=0,curCat='';
+  FIXES.forEach(f=>{
+    if(fixFilter!=='All'&&f.cat!==fixFilter)return;
+    if(q&&!((f.cat+' '+f.p+' '+(f.c||'')+' '+f.d).toLowerCase().includes(q)))return;
+    if(f.cat!==curCat){curCat=f.cat;const h=document.createElement('div');h.className='cathead';h.textContent=f.cat+(f.cat==='Concepts'?' · general guidance':'');fl.appendChild(h);}
+    const el=document.createElement('div');el.className='fix';
+    el.innerHTML=`<button aria-expanded="false"><span>${f.p}</span><span class="caret">›</span></button><div class="body">${f.c?`<div class="cause">${FMT(f.c)}</div>`:''}<div class="do">${FMT(f.d)}</div></div>`;
+    el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
+    fl.appendChild(el);shown++;
+  });
+  if(!shown)fl.innerHTML=`<div class="empty">Nothing matches "${fq.value}". Try a plainer word — a button name, or what went wrong.</div>`;
+}
+renderFixes();
 
 /* ---- firmware / content stamp ---- */
 const metaEl=document.getElementById('metaline-combos');

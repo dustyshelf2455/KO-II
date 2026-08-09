@@ -31,7 +31,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
    (main.wrap so this outranks .wrap's shorthand padding) */
 main.wrap{padding-top:max(calc(env(safe-area-inset-top,0px) + 12px), 64px)}
 #map{min-height:calc(100svh - 190px);display:flex;flex-direction:column;justify-content:center}
-section[hidden]{display:none}
+section[hidden],#map[hidden]{display:none !important}
 .lede{color:var(--dim);font-size:13.5px;margin:2px 0 16px}
 .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--orange);text-transform:uppercase;margin-bottom:6px}
 
@@ -238,6 +238,8 @@ section[hidden]{display:none}
 .step .sn{font-family:ui-monospace,monospace;font-size:12px;color:var(--amber);flex:0 0 20px;padding-top:1px}
 .step .sx{font-size:13.5px}.step .sx b{color:var(--ink)}
 .step .sx .cmd{font-family:ui-monospace,monospace;color:var(--amber);font-size:12.5px}
+.rcat{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.08em;color:var(--orange);text-transform:uppercase}
+.cause .cmd,.tip .cmd{font-family:ui-monospace,monospace;color:var(--amber);font-size:12.5px}
 .tip{display:flex;gap:9px;background:rgba(255,90,31,.09);border:1px solid rgba(255,90,31,.25);border-radius:10px;
   padding:11px 12px;margin:6px 0 16px;font-size:13px;color:#f4d9c7}.tip b{color:var(--orange)}
 
