@@ -26,7 +26,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 .wrap{max-width:520px;margin:0 auto;padding:0 16px}
 
-main{padding-top:calc(env(safe-area-inset-top,0px) + 24px)}
+/* clear the iPhone status bar / Dynamic Island even when the safe-area
+   env() under-reports — never let the device run into it.
+   (main.wrap so this outranks .wrap's shorthand padding) */
+main.wrap{padding-top:max(calc(env(safe-area-inset-top,0px) + 12px), 64px)}
 #map{min-height:calc(100svh - 190px);display:flex;flex-direction:column;justify-content:center}
 section[hidden]{display:none}
 .lede{color:var(--dim);font-size:13.5px;margin:2px 0 16px}
@@ -278,34 +281,60 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(18,15,11,.
 /* ===== iPad / wide screens =====
    The device keeps its proportions; the extra width becomes a quiet
    TE-style frame — speaker-grille dot grid and hairline rules. */
+/* ===== iPad / wide screens =====
+   Legibility over strict proportions: the device stretches to fill almost
+   the full height (toolbar stays clear) and most of the width. The
+   remaining margin gets the TE-style dot-grid frame. */
 @media (min-width: 768px){
-  .wrap{max-width:600px}
-  .navin,.sheet{max-width:600px}
-  main{padding-top:calc(env(safe-area-inset-top,0px) + 28px)}
+  .wrap{max-width:700px}
+  .navin,.sheet{max-width:680px}
+  main.wrap{padding-top:max(calc(env(safe-area-inset-top,0px) + 10px), 34px)}
+  body{padding-bottom:calc(78px + var(--safe-b))}
+  #map{min-height:0}
+  #map .device{display:flex;flex-direction:column;
+    height:calc(100svh - var(--safe-b) - 128px);min-height:560px}
+  #map .surface{flex:1 1 auto}
+  .key,.knob{min-height:0}
   body::before,body::after{content:"";position:fixed;top:0;bottom:0;z-index:1;pointer-events:none;
-    width:calc((100vw - 640px)/2);
+    width:calc((100vw - 740px)/2);
     background-image:radial-gradient(rgba(236,231,220,.075) 1.3px, transparent 1.5px);
     background-size:17px 17px;background-position:center}
   body::before{left:0;border-right:1px solid rgba(255,176,35,.14)}
   body::after{right:0;border-left:1px solid rgba(255,176,35,.14)}
-  .key{min-height:64px}
-  .knob .dial{width:44px;height:44px}
-  .dicon svg{width:14px;height:14px}
-  .dicon .tx{font-size:7.5px}
-  .pxg{width:17px;height:15px}
+  .knob .dial{width:52px;height:52px}
+  .k2 .h,.key .lab{font-size:11px}
+  .k-grp .lab{font-size:17px}
+  .k-pad .num{font-size:19px}
+  .key .silk{font-size:7.5px;top:-11px}
+  .dicon svg{width:15px;height:15px}
+  .dicon .tx{font-size:8px}
+  .dicon .txbig{font-size:12px}
+  .pill{font-size:7.5px;padding:2px 6px}
+  .lbox{font-size:10px;padding:1.5px 4px}
+  .pxg{width:19px;height:16px}
+  .dsdigits .num{font-size:30px}
+  .dgauge svg{width:25px;height:25px}
+  .chint{font-size:8.5px;margin-top:13px}
 }
 @media (min-width: 1024px){
-  .wrap,.navin,.sheet{max-width:680px}
-  body::before,body::after{width:calc((100vw - 720px)/2)}
-  .key{min-height:72px}
-  .knob .dial{width:48px;height:48px}
-  .dsdigits .num{font-size:30px}
-  .chint{font-size:8px}
-  .dicon svg{width:16px;height:16px}
-  .dicon .tx{font-size:8.5px}
-  .dicon .txbig{font-size:13px}
-  .pxg{width:20px;height:17px}
-  .dgauge svg{width:26px;height:26px}
+  .wrap{max-width:920px}
+  .navin,.sheet{max-width:720px}
+  body::before,body::after{width:calc((100vw - 960px)/2)}
+  .knob .dial{width:60px;height:60px}
+  .k2 .h,.key .lab{font-size:13px}
+  .k-grp .lab{font-size:20px}
+  .k-pad .num{font-size:23px}
+  .key .silk{font-size:8.5px;top:-12px}
+  .dsdigits .num{font-size:36px}
+  .chint{font-size:9px}
+  .dicon svg{width:18px;height:18px}
+  .dicon .tx{font-size:9.5px}
+  .dicon .txbig{font-size:15px}
+  .pill{font-size:8.5px;padding:2px 7px}
+  .lbox{font-size:11px}
+  .pxg{width:23px;height:19px}
+  .dgauge svg{width:30px;height:30px}
+  .bko{font-size:19px}.b128{font-size:9px}.bjp{font-size:10px}
 }
 
 @media (prefers-reduced-motion: reduce){*{transition:none !important}}

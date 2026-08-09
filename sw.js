@@ -1,7 +1,7 @@
 /* KO II Coach — service worker
    Cache-everything, offline-first. Bump VERSION on every content or asset
    change so installed phones pick up the new files. */
-const VERSION = 'ko2-coach-v3';
+const VERSION = 'ko2-coach-v4';
 const ASSETS = [
   './',
   './index.html',
