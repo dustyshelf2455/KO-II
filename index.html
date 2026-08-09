@@ -17,22 +17,25 @@
 </head>
 <body>
 
+<!-- device label, shown in the wide-screen side border -->
+<div class="sidebrand" aria-hidden="true">
+  <span class="bko">K.O. II</span><span class="bjp">サンプラー</span><span class="b128">128 MB SAMPLER COMPOSER</span>
+</div>
+
 <main class="wrap">
 
   <!-- ===== MAP — the device, traced from the owner's unit ===== -->
   <section id="map">
     <div class="device" role="group" aria-label="K.O. II — faithful control map">
 
-      <!-- top edge port tabs -->
+      <!-- rear-connection tabs, perched on the screen's top edge.
+           Tap one to learn what that jack does. -->
       <div class="ports">
-        <span class="port p-wht">OUTPUT</span><span class="port p-red">INPUT</span>
-        <span class="port p-blk">SYNC&nbsp;&nbsp;MIDI</span><span class="port p-grey">USB</span><span class="port p-plain">POWER</span>
-      </div>
-
-      <!-- brand panel + speaker grille -->
-      <div class="dhead">
-        <div class="brand"><span class="bko">K.O. II</span><span class="bjp">サンプラー</span><span class="b128">128 MB SAMPLER COMPOSER</span></div>
-        <div class="grille" aria-hidden="true"></div>
+        <button class="port p-wht" data-id="ptout">OUTPUT</button>
+        <button class="port p-red" data-id="ptin">INPUT</button>
+        <button class="port p-blk" data-id="ptsyncmidi">SYNC&nbsp;&nbsp;MIDI</button>
+        <button class="port p-grey" data-id="ptusb">USB</button>
+        <button class="port p-pow" data-id="ptpower"><span class="pdot"></span>POWER</button>
       </div>
 
       <!-- segment display replica — every indicator traced from the real

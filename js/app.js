@@ -18,7 +18,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
 
 function openSheet(id){
   const c=CTRL[id]; if(!c) return;
-  let h=`<div class="stag"><span class="swatch" style="background:${c.color}"></span>${id.startsWith('sf')?'shift function':'control'}</div>`;
+  const kind=id.startsWith('sf')?'shift function':(id.startsWith('pt')?'connection':'control');
+  let h=`<div class="stag"><span class="swatch" style="background:${c.color}"></span>${kind}</div>`;
   h+=`<h2>${c.name}</h2><div class="ssub mono">${c.sub}</div><div class="sblurb">${c.blurb}</div>`;
   if(c.combos&&c.combos.length){h+=`<div class="scmb">combos</div>`;
     c.combos.forEach(([k,a])=>h+=`<div class="combo"><div class="k">${k}</div><div class="a">${a}</div></div>`);}
@@ -33,6 +34,7 @@ function openIcon(btn){
   showSheet(h);
 }
 document.querySelectorAll('.dicon').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openIcon(b);}));
+document.querySelectorAll('.ports .port').forEach(b=>b.addEventListener('click',()=>openSheet(b.dataset.id)));
 
 /* ---- keys: tap = control info · long-press = the boxed shift function ---- */
 const LP_MS=500;

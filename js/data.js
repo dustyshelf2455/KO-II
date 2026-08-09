@@ -197,6 +197,23 @@ CTRL.sfsystem={name:"SYSTEM",sub:"shift + erase · settings",color:"#b7b3aa",
   blurb:"The SYSTEM box under ERASE. SHIFT + ERASE opens system settings — pad velocity, metronome, MIDI and sync, LED brightness, recording rates. Type a code and ENTER for quick access.",
   combos:[["SHIFT + ERASE","Open system settings"],["301 / 302 / 300 + ENTER","Velocity high / low / off"],["400 + ENTER","Metronome on"],["MIDI → Clock","Sync off / on / out"]]};
 
+/* Rear connections + power — the tabs printed along the top edge */
+CTRL.ptout={name:"OUTPUT",sub:"3.5 mm stereo out",color:"#eae7e0",
+  blurb:"The main output jack — headphones or line out to speakers, a recorder, or an interface. The VOLUME knob sets its level (and the built-in speaker's).",
+  combos:[["Turn VOLUME","Output level"],["Plug in phones","Speaker mutes, output continues"]]};
+CTRL.ptin={name:"INPUT",sub:"3.5 mm sampling input",color:"#e8481c",
+  blurb:"Where sound gets in — your guitar, phone, mixer, anything with a 3.5 mm line out. In Sample mode, pick line-in with – / + and set the gain with KNOB X (watch the level meter; CLIP means back off).",
+  combos:[["SAMPLE, then – / +","Choose line-in (mono / stereo / L / R)"],["KNOB X (in Sample)","Input gain"],["Hold SAMPLE + TEMPO","Match project tempo to the input"]]};
+CTRL.ptsyncmidi={name:"SYNC · MIDI",sub:"four 3.5 mm jacks · I/O · I/O",color:"#17140f",
+  blurb:"Four jacks under one tab, marked I and O on the unit: sync in + out (PO-style pulse clock) and TRS MIDI in + out. The K.O. II can lead the clock or follow. No built-in Bluetooth — wireless MIDI needs a third-party BLE adapter.",
+  combos:[["SHIFT + ERASE → MIDI → Clock","off / on / out"],["SYNC jacks","Pulse clock with POs & friends"],["MIDI jacks","TRS MIDI in / out to synths & DAWs"]]};
+CTRL.ptusb={name:"USB",sub:"usb-c · power & data",color:"#8e8a80",
+  blurb:"USB-C does nearly everything: powers the unit, moves samples with the EP Sample Tool, installs firmware updates, carries MIDI — and on OS 2.5, class-compliant USB audio in and out for phones, computers and DAWs.",
+  combos:[["teenage.engineering/apps","EP Sample Tool + firmware updater"],["USB-MIDI","Notes light the MIDI/USB icons"],["USB audio (OS 2.5)","Record straight into a DAW or phone"]]};
+CTRL.ptpower={name:"POWER",sub:"switch · usb-c or 4×AAA",color:"#e8481c",
+  blurb:"The power switch on the top edge. Runs on USB-C or four AAA batteries (don't mix battery types). Two boot-time moves live here: hold MAIN while switching on for lock mode, hold SHIFT + ERASE while switching on to format the drive.",
+  combos:[["Hold MAIN at power-on","Lock mode — restart to clear"],["Hold SHIFT + ERASE at power-on","Format (erases sounds; fixes E.10–E.12)"],["Battery icon","Lit on battery, blinks when low"]]};
+
 /* =========================================================================
    Display icons — traced from the owner's photos of the real 128 MB unit
    (one at boot with every segment lit, one mid-session). Positions and

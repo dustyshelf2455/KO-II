@@ -37,32 +37,32 @@ section[hidden],#map[hidden]{display:none !important}
 
 /* ===== faithful device ===== */
 .device{background:linear-gradient(180deg,var(--bodyhi),var(--body) 22%,var(--bodylo));
-  border-radius:14px 14px 20px 20px;padding:0 12px 16px;position:relative;
+  border-radius:20px;padding:12px 12px 16px;position:relative;
   box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 6px rgba(0,0,0,.12)}
 
-/* top edge port tabs */
-.ports{display:flex;gap:8px;justify-content:space-between;padding:0 8px;transform:translateY(-6px)}
-.port{font-family:ui-monospace,monospace;font-size:6px;font-weight:700;letter-spacing:.08em;
-  padding:2px 7px 5px;border-radius:3px 3px 0 0;line-height:1;text-transform:uppercase}
+/* rear-connection tabs, perched directly on the screen's top edge */
+.ports{display:flex;gap:8px;justify-content:space-between;align-items:flex-end;padding:0 10px;position:relative;z-index:2}
+.port{font-family:ui-monospace,monospace;font-size:6.5px;font-weight:700;letter-spacing:.08em;
+  padding:3px 8px;border-radius:3px 3px 0 0;line-height:1;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:4px;-webkit-tap-highlight-color:transparent}
+.port:active{filter:brightness(1.15)}
 .p-wht{background:#f2efe8;color:#1a1712;border:1px solid #c6c2b9;border-bottom:none}
 .p-red{background:#e8481c;color:#fff}
 .p-blk{background:#17140f;color:#d8d4cb}
 .p-grey{background:#8e8a80;color:#17140f}
-.p-plain{background:none;color:#6b675e;padding-top:4px}
+.p-pow{background:none;color:#6b675e;padding-bottom:5px}
+.pdot{width:5px;height:5px;border-radius:1px;background:#e8481c;display:inline-block}
 
-/* brand panel + speaker grille */
-.dhead{display:flex;align-items:stretch;gap:0;margin:2px 0 0}
-.brand{flex:1;background:#f4f1ea;border-radius:2px 0 0 2px;padding:10px 12px 8px;display:flex;flex-direction:column;gap:1px}
+/* device label — lives in the wide-screen side border */
 .bko{font-family:ui-monospace,monospace;font-weight:700;font-size:15px;letter-spacing:.02em;color:#17140f;line-height:1.1}
 .bjp{font-size:8px;color:#c33;letter-spacing:.14em}
-.b128{font-family:ui-monospace,monospace;font-size:7.5px;letter-spacing:.1em;color:#4a463d;margin-top:auto;padding-top:8px}
-.grille{flex:0 0 34%;border-radius:0 2px 2px 0;background-color:#b3afa5;
-  background-image:radial-gradient(#57534a 1.1px, transparent 1.3px);background-size:6px 6px;background-position:center}
+.b128{font-family:ui-monospace,monospace;font-size:7.5px;letter-spacing:.1em;color:#4a463d;margin-top:auto;padding-top:14px}
+.sidebrand{display:none}
 
 /* ===== segment display replica =====
    Traced from the owner's boot photo — every indicator is a .dicon:
    muted = unlit segment, .lit = illuminated. Tap for the explanation. */
-.dscreen{background:#0a0805;border-radius:4px;padding:9px 6px;margin:6px 0 13px;overflow:hidden;
+.dscreen{background:#0a0805;border-radius:4px;padding:9px 6px;margin:0 0 13px;overflow:hidden;
   display:flex;flex-direction:column;gap:6px;font-family:ui-monospace,monospace;
   box-shadow:inset 0 0 22px rgba(255,120,20,.05), 0 1px 0 rgba(255,255,255,.4)}
 .drow{display:flex;align-items:center;justify-content:space-between;gap:2px}
@@ -318,6 +318,20 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(18,15,11,.
   .dgauge svg{width:25px;height:25px}
   .chint{font-size:8.5px;margin-top:13px}
 }
+/* the K.O. II label card, exactly as printed on the unit, in the left
+   border — shown once the border is wide enough to hold it */
+@media (min-width: 1200px){
+  .sidebrand{display:flex;flex-direction:column;gap:2px;position:fixed;z-index:2;
+    top:calc(env(safe-area-inset-top,0px) + 40px);
+    left:max(16px, calc(((100vw - 960px)/2 - 180px)/2));
+    width:min(180px, calc((100vw - 960px)/2 - 28px));
+    background:#f4f1ea;border-radius:2px;padding:14px 14px 10px;
+    box-shadow:0 8px 26px rgba(0,0,0,.45)}
+  .sidebrand .bko{font-size:20px}
+  .sidebrand .bjp{font-size:10px}
+  .sidebrand .b128{font-size:8.5px;padding-top:26px}
+}
+
 @media (min-width: 1024px){
   .wrap{max-width:920px}
   .navin,.sheet{max-width:720px}
