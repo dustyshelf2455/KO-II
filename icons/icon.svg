@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- KO II Coach — dark screen, orange record dot, amber silkscreen type -->
+  <rect width="512" height="512" rx="96" fill="#16130e"/>
+  <rect x="24" y="24" width="464" height="464" rx="76" fill="none" stroke="#ffb023" stroke-opacity=".18" stroke-width="6"/>
+  <circle cx="256" cy="196" r="64" fill="#ff5a1f"/>
+  <circle cx="256" cy="196" r="94" fill="none" stroke="#ff5a1f" stroke-opacity=".35" stroke-width="10"/>
+  <text x="256" y="356" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="72" font-weight="bold" fill="#ffb023" text-anchor="middle" letter-spacing="6">K.O.II</text>
+  <text x="256" y="416" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="30" fill="#8f8778" text-anchor="middle" letter-spacing="10">COACH</text>
+</svg>
