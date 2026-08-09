@@ -17,41 +17,66 @@
 </head>
 <body>
 
-<header>
-  <div class="screen">
-    <span class="dot"></span><span class="brand mono">K.O. II</span>
-    <span class="hint mono" id="scr-hint">tap a control</span>
-  </div>
-</header>
-
 <main class="wrap">
 
-  <!-- ===== MAP ===== -->
+  <!-- ===== MAP — the device, nothing else ===== -->
   <section id="map">
-    <div class="eyebrow">your device, 1:1</div>
-    <p class="lede">This mirrors your unit's real layout, labels and colors. Tap any control to see exactly what it does and every combo it's part of.</p>
-
     <div class="device" role="group" aria-label="K.O. II — faithful control map">
-      <!-- screen replica -->
-      <div class="dscreen">
-        <div class="grp">
+
+      <!-- segment display replica — every indicator is tappable.
+           Muted = idle, lit = as in use. Tap one for what it means. -->
+      <div class="dscreen" id="dscreen">
+        <button class="dicon dsgrp lit" data-icon="groups" aria-label="Group tags A to D">
           <b><i style="background:var(--gA)"></i>A</b><b><i style="background:var(--gB)"></i>B</b>
           <b><i style="background:var(--gC)"></i>C</b><b><i style="background:var(--gD)"></i>D</b>
+        </button>
+
+        <div class="dstop">
+          <button class="dicon" data-icon="rec" aria-label="Record dot"><span class="dot-rec"></span></button>
+          <button class="dicon" data-icon="play" aria-label="Play"><svg viewBox="0 0 12 12"><path d="M2.5 1.5l8 4.5-8 4.5z"/></svg></button>
+          <button class="dicon" data-icon="note" aria-label="Note value"><svg viewBox="0 0 12 12"><circle cx="4" cy="9.4" r="2.1"/><path d="M6 9.4V1.6l3.6 1.5v2.2L6.6 3.9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></button>
+          <button class="dicon" data-icon="q" aria-label="Quantize"><span class="tx">Q</span></button>
+          <button class="dicon" data-icon="metro" aria-label="Metronome"><svg viewBox="0 0 12 12"><path d="M4 1.5h4l1.6 9H2.4z" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M6 8.5L8.6 3" stroke="currentColor" stroke-width="1.1"/></svg></button>
+          <button class="dicon" data-icon="keysic" aria-label="Keys mode"><svg viewBox="0 0 14 12"><rect x="1" y="2" width="12" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M4.7 2v5M9.3 2v5" stroke="currentColor" stroke-width="1.1"/></svg></button>
+          <button class="dicon" data-icon="punch" aria-label="Punch-in FX"><svg viewBox="0 0 13 12"><path d="M2 7.2c0-2.6 1.6-4.4 4.2-4.4 2.4 0 4.3 1.5 4.3 3.9 0 1.9-1.2 3.2-3 3.5H4.2C2.8 10 2 8.8 2 7.2z"/><rect x="1.2" y="8.6" width="4.6" height="2.2" rx="1"/></svg></button>
+          <button class="dicon" data-icon="loop" aria-label="Loop"><svg viewBox="0 0 12 12"><path d="M6 2a4 4 0 110 8 4 4 0 01-3.4-1.9" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 10.4V7.6h2.8z"/></svg></button>
+          <button class="dicon" data-icon="umb" aria-label="Undo umbrella"><svg viewBox="0 0 12 12"><path d="M1.2 6a4.8 4.8 0 019.6 0z"/><path d="M6 6v3.4a1.2 1.2 0 01-2.4 0" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
         </div>
-        <div class="mid"><span class="bar">BAR</span><span class="num" id="dev-num">S.01</span></div>
-        <div class="rt"><span></span><span></span><span></span><span class="q">Q</span></div>
-        <div class="pill"><span class="main">MAIN</span><span class="rec"></span></div>
+
+        <div class="dsnum">
+          <button class="dicon dsbar lit" data-icon="bar" aria-label="Bar indicator"><span class="barpill">BAR</span></button>
+          <button class="dicon dsdigits lit" data-icon="digits" aria-label="Main number display"><span class="num" id="dev-num">S.01</span></button>
+        </div>
+
+        <div class="dsright">
+          <div class="dsrow">
+            <button class="dicon" data-icon="batt" aria-label="Battery"><svg viewBox="0 0 14 8"><rect x="0.8" y="1" width="11" height="6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="12.4" y="2.8" width="1.4" height="2.4" rx="0.5"/><rect x="2.4" y="2.5" width="2.4" height="3"/></svg></button>
+            <button class="dicon" data-icon="usb" aria-label="USB"><span class="tx">USB</span></button>
+            <button class="dicon" data-icon="midi" aria-label="MIDI"><span class="tx">MIDI</span></button>
+          </div>
+          <div class="dsrow">
+            <button class="dicon" data-icon="mic" aria-label="Microphone input"><svg viewBox="0 0 10 12"><rect x="3.2" y="1" width="3.6" height="6" rx="1.8"/><path d="M1.8 5.8a3.2 3.2 0 006.4 0M5 9v2" fill="none" stroke="currentColor" stroke-width="1.1"/></svg></button>
+            <button class="dicon" data-icon="line" aria-label="Line input"><span class="tx">LINE</span></button>
+            <button class="dicon" data-icon="clip" aria-label="Clip warning"><span class="tx clipred">CLIP</span></button>
+          </div>
+          <button class="dicon dsmeter" data-icon="meter" aria-label="Level meter">
+            <span class="mlab">LOW</span><span class="mbars"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="mlab">MID</span>
+          </button>
+        </div>
+
+        <button class="dicon dsmode lit" data-icon="mode" aria-label="Mode label"><span class="modepill">MAIN</span></button>
       </div>
 
       <!-- control surface: 7 cols × 5 rows, true positions.
-           The tiny labels above the 12 pads are the fader destinations,
-           printed on the body above each pad exactly as on the unit. -->
+           Tiny labels above the 12 pads = fader destinations, printed on the
+           body exactly as on the unit. data-shift = the key's boxed shift
+           function, opened with a long-press. -->
       <div class="surface">
         <!-- row 1 -->
         <button class="key knob vol" data-id="volume" style="grid-column:1;grid-row:1"><span class="dial"></span><span class="kl">vol</span></button>
-        <button class="key k-blk" data-id="sound" style="grid-column:2;grid-row:1"><span class="lab">SOUND</span><span class="sub sb-wht">edit</span></button>
-        <button class="key k-blk" data-id="main" style="grid-column:3;grid-row:1"><span class="lab">MAIN</span><span class="sub sb-org">commit</span></button>
-        <button class="key k-blk" data-id="tempo" style="grid-column:4;grid-row:1"><span class="lab">TEMPO</span><span class="sub sb-grey">loop</span></button>
+        <button class="key k-blk" data-id="sound" data-shift="sfedit" style="grid-column:2;grid-row:1"><span class="lab">SOUND</span><span class="sub sb-wht">edit</span></button>
+        <button class="key k-blk" data-id="main" data-shift="sfcommit" style="grid-column:3;grid-row:1"><span class="lab">MAIN</span><span class="sub sb-org">commit</span></button>
+        <button class="key k-blk" data-id="tempo" data-shift="sfloop" style="grid-column:4;grid-row:1"><span class="lab">TEMPO</span><span class="sub sb-grey">loop</span></button>
         <div style="grid-column:5;grid-row:1"></div>
         <button class="key knob bpm" data-id="knobx" style="grid-column:6;grid-row:1"><span class="dial"></span><span class="kl">x</span></button>
         <button class="key knob met" data-id="knoby" style="grid-column:7;grid-row:1"><span class="dial"></span><span class="kl">y</span></button>
@@ -62,8 +87,8 @@
         <button class="key k-pad" data-id="pad7" style="grid-column:3;grid-row:2"><span class="silk">level</span><span class="num">7</span></button>
         <button class="key k-pad" data-id="pad8" style="grid-column:4;grid-row:2"><span class="silk">pitch</span><span class="num">8</span></button>
         <button class="key k-pad" data-id="pad9" style="grid-column:5;grid-row:2"><span class="silk">time</span><span class="num">9</span></button>
-        <button class="key k-orange" data-id="sample" style="grid-column:6;grid-row:2"><span class="lab">SAMPLE</span><span class="sub sb-wht">chop</span></button>
-        <button class="key k-blk" data-id="timing" style="grid-column:7;grid-row:2"><span class="lab">TIMING</span><span class="sub sb-wht">correct</span></button>
+        <button class="key k-orange" data-id="sample" data-shift="sfchop" style="grid-column:6;grid-row:2"><span class="lab">SAMPLE</span><span class="sub sb-wht">chop</span></button>
+        <button class="key k-blk" data-id="timing" data-shift="sfcorrect" style="grid-column:7;grid-row:2"><span class="lab">TIMING</span><span class="sub sb-wht">correct</span></button>
 
         <!-- row 3 -->
         <button class="key k-blk" data-id="fader" style="grid-column:1;grid-row:3"><span class="lab">FADER</span></button>
@@ -71,8 +96,8 @@
         <button class="key k-pad" data-id="pad4" style="grid-column:3;grid-row:3"><span class="silk">lpf</span><span class="num">4</span></button>
         <button class="key k-pad" data-id="pad5" style="grid-column:4;grid-row:3"><span class="silk">hpf</span><span class="num">5</span></button>
         <button class="key k-pad" data-id="pad6" style="grid-column:5;grid-row:3"><span class="silk">fx</span><span class="num">6</span></button>
-        <button class="key k-blk" data-id="fx" style="grid-column:6;grid-row:3"><span class="lab">FX</span><span class="sub sb-wht">output</span></button>
-        <button class="key k-wht" data-id="erase" style="grid-column:7;grid-row:3"><span class="lab">ERASE</span><span class="sub sb-grey">system</span></button>
+        <button class="key k-blk" data-id="fx" data-shift="sfoutput" style="grid-column:6;grid-row:3"><span class="lab">FX</span><span class="sub sb-wht">output</span></button>
+        <button class="key k-wht" data-id="erase" data-shift="sfsystem" style="grid-column:7;grid-row:3"><span class="lab">ERASE</span><span class="sub sb-grey">system</span></button>
 
         <!-- row 4 -->
         <div class="key slider" data-noop style="grid-column:1;grid-row:4;background:none;border:none;box-shadow:none"><div class="track"><div class="cap"></div></div></div>
@@ -92,9 +117,10 @@
         <button class="key k-orange" data-id="record" style="grid-column:6;grid-row:5"><span class="lab" style="font-size:8.5px">RECORD</span></button>
         <button class="key k-grey" data-id="play" style="grid-column:7;grid-row:5"><span class="lab" style="font-size:10px">PLAY</span></button>
       </div>
+
+      <!-- silkscreen hint, printed on the chassis like the unit's own labels -->
+      <div class="chint">tap a key · hold a key for its shift box · tap the screen icons</div>
     </div>
-    <p class="maphelp">Positions, labels and shift-boxes match your unit. The tiny words above the pads are the fader destinations printed on the body — hold FADER + a pad to assign one. Group keys are grey like the real device; their red / amber / magenta / blue lives on the screen.</p>
-    <p class="metaline" id="metaline-map"></p>
   </section>
 
   <!-- ===== COMBOS ===== -->

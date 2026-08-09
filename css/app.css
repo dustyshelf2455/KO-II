@@ -26,15 +26,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 .wrap{max-width:520px;margin:0 auto;padding:0 16px}
 
-header{position:sticky;top:0;z-index:30;background:var(--bg);padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
-.screen{max-width:520px;margin:0 auto;background:linear-gradient(180deg,#0d0b07,#151009);
-  border:1px solid rgba(255,176,35,.18);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;
-  box-shadow:inset 0 0 26px rgba(255,120,20,.06)}
-.screen .brand{color:var(--amber);font-weight:700;font-size:13px;letter-spacing:.16em}
-.screen .hint{color:#c9a86a;font-size:11px;letter-spacing:.14em;margin-left:auto;text-align:right;text-transform:uppercase}
-.screen .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange)}
-
-main{padding-top:16px}
+main{padding-top:calc(env(safe-area-inset-top,0px) + 14px)}
+#map{min-height:calc(100svh - 190px);display:flex;flex-direction:column;justify-content:center}
 section[hidden]{display:none}
 .lede{color:var(--dim);font-size:13.5px;margin:2px 0 16px}
 .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--orange);text-transform:uppercase;margin-bottom:6px}
@@ -44,30 +37,68 @@ section[hidden]{display:none}
   border-radius:20px;padding:14px 12px 16px;
   box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 6px rgba(0,0,0,.12)}
 
-/* device screen replica */
-.dscreen{background:#0c0a06;border-radius:9px;padding:8px 10px;margin-bottom:13px;
-  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;font-family:ui-monospace,monospace;
+/* ===== segment display replica =====
+   Every indicator is a .dicon button: muted like an unlit segment by
+   default, .lit = illuminated. Tap for the infographic explanation. */
+.dscreen{background:#0c0a06;border-radius:9px;padding:9px 10px 8px;margin-bottom:13px;
+  display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:
+    "grp top inp"
+    "grp num inp"
+    "grp mode inp";
+  align-items:center;column-gap:10px;row-gap:4px;font-family:ui-monospace,monospace;
   box-shadow:inset 0 0 20px rgba(255,120,20,.05)}
-.dscreen .grp{display:flex;flex-direction:column;gap:3px}
-.dscreen .grp b{display:flex;align-items:center;gap:5px;font-size:8px;color:#6a6459;letter-spacing:.1em}
-.dscreen .grp i{width:16px;height:7px;border-radius:2px;display:inline-block;font-style:normal}
-.dscreen .mid{text-align:center}
-.dscreen .bar{display:inline-block;background:#e5392b;color:#fff;font-size:8px;font-weight:700;
-  padding:1px 4px;border-radius:2px;letter-spacing:.06em;vertical-align:middle;margin-right:6px}
-.dscreen .num{color:#a9c6ff;font-size:24px;font-weight:700;letter-spacing:.12em;text-shadow:0 0 9px rgba(120,160,255,.55)}
-.dscreen .rt{display:flex;gap:4px;align-items:center;opacity:.85}
-.dscreen .rt span{width:7px;height:7px;border-radius:2px;background:#3a342a}
-.dscreen .rt .q{color:#efe9dd;font-size:13px;font-weight:700;background:none;width:auto;height:auto}
-.dscreen .pill{grid-column:1 / -1;display:flex;align-items:center;gap:6px;margin-top:4px}
-.dscreen .pill .main{background:var(--orange);color:#1a0d05;font-size:9px;font-weight:700;padding:2px 10px;border-radius:3px;letter-spacing:.1em}
-.dscreen .pill .rec{width:9px;height:9px;border-radius:50%;background:#e5392b;box-shadow:0 0 7px #e5392b}
+
+.dicon{display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  padding:2px;border-radius:4px;color:#e8e2d0;opacity:.24;
+  transition:opacity .18s ease, filter .18s ease;-webkit-tap-highlight-color:transparent}
+.dicon svg{width:13px;height:13px;fill:currentColor;display:block}
+.dicon .tx{font-size:7.5px;font-weight:700;letter-spacing:.1em;line-height:1}
+.dicon.lit{opacity:1;filter:drop-shadow(0 0 5px rgba(255,190,90,.45))}
+.dicon:active{opacity:.75}
+
+.dsgrp{grid-area:grp;flex-direction:column;align-items:flex-start;gap:3px}
+.dsgrp b{display:flex;align-items:center;gap:5px;font-size:8px;color:#b8b09c;letter-spacing:.1em;font-weight:700}
+.dsgrp i{width:16px;height:7px;border-radius:2px;display:inline-block;font-style:normal}
+
+.dstop{grid-area:top;display:flex;align-items:center;justify-content:space-between;padding:0 2px}
+.dot-rec{width:8px;height:8px;border-radius:50%;background:currentColor;display:block}
+.dicon[data-icon=rec]{color:#e5392b}
+.dicon[data-icon=rec].lit{filter:drop-shadow(0 0 6px #e5392b)}
+
+.dsnum{grid-area:num;display:flex;align-items:center;justify-content:center;gap:8px}
+.barpill{display:inline-block;background:currentColor;border-radius:2px;padding:1px 4px;line-height:1}
+.dicon[data-icon=bar]{color:#e5392b}
+.dicon[data-icon=bar] .barpill{color:#fff;background:#e5392b;font-size:8px;font-weight:700;letter-spacing:.06em}
+.dsdigits .num{color:#a9c6ff;font-size:24px;font-weight:700;letter-spacing:.12em;line-height:1}
+.dsdigits.lit{filter:drop-shadow(0 0 8px rgba(120,160,255,.5))}
+
+.dsright{grid-area:inp;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.dsrow{display:flex;gap:6px;align-items:center}
+.clipred{color:#e5392b}
+.dicon[data-icon=clip].lit{filter:drop-shadow(0 0 6px #e5392b)}
+.dsmeter{gap:3px}
+.dsmeter .mlab{font-size:6px;font-weight:700;letter-spacing:.08em}
+.dsmeter .mbars{display:inline-flex;gap:1.5px;align-items:flex-end}
+.dsmeter .mbars i{width:2.5px;background:currentColor;display:block}
+.dsmeter .mbars i:nth-child(1){height:3px}.dsmeter .mbars i:nth-child(2){height:4.5px}
+.dsmeter .mbars i:nth-child(3){height:6px}.dsmeter .mbars i:nth-child(4){height:7.5px}
+.dsmeter .mbars i:nth-child(5){height:9px}.dsmeter .mbars i:nth-child(6){height:10.5px}
+
+.dsmode{grid-area:mode;justify-self:center}
+.modepill{background:var(--orange);color:#1a0d05;font-size:9px;font-weight:700;padding:2px 10px;border-radius:3px;letter-spacing:.1em;line-height:1.4}
+.dsmode{color:var(--orange)}
+.dsmode.lit{filter:drop-shadow(0 0 6px rgba(255,90,31,.5))}
+
+/* silkscreen hint printed on the chassis */
+.chint{margin-top:11px;text-align:center;font-family:ui-monospace,monospace;
+  font-size:7px;font-weight:700;letter-spacing:.11em;color:#8b8577;text-transform:uppercase;white-space:nowrap}
 
 /* 7 cols × 5 rows; the wider row gap leaves room for the silkscreen
    fader labels printed on the body above each pad, like the real unit */
 .surface{display:grid;grid-auto-rows:1fr;gap:12px 6px;
   grid-template-columns:minmax(0,.82fr) minmax(0,.82fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.04fr) minmax(0,1.04fr)}
 
-.key{-webkit-tap-highlight-color:transparent;position:relative;border-radius:9px;
+.key{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;position:relative;border-radius:9px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   padding:8px 3px 6px;min-height:58px;text-align:center;
   transition:transform .05s ease, filter .1s ease;border:1px solid rgba(0,0,0,.35)}
@@ -199,5 +230,30 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(18,15,11,.
 .tab{padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--faint)}
 .tab .tl{font-size:10.5px;letter-spacing:.06em;font-family:ui-monospace,monospace;text-transform:uppercase}
 .tab.on{color:var(--orange)}.tab svg{width:22px;height:22px}
+
+/* ===== iPad / wide screens =====
+   The device keeps its proportions; the extra width becomes a quiet
+   TE-style frame — speaker-grille dot grid and hairline rules. */
+@media (min-width: 768px){
+  .wrap{max-width:600px}
+  .navin,.sheet{max-width:600px}
+  main{padding-top:calc(env(safe-area-inset-top,0px) + 28px)}
+  body::before,body::after{content:"";position:fixed;top:0;bottom:0;z-index:1;pointer-events:none;
+    width:calc((100vw - 640px)/2);
+    background-image:radial-gradient(rgba(236,231,220,.075) 1.3px, transparent 1.5px);
+    background-size:17px 17px;background-position:center}
+  body::before{left:0;border-right:1px solid rgba(255,176,35,.14)}
+  body::after{right:0;border-left:1px solid rgba(255,176,35,.14)}
+  .key{min-height:64px}
+  .knob .dial{width:44px;height:44px}
+}
+@media (min-width: 1024px){
+  .wrap,.navin,.sheet{max-width:680px}
+  body::before,body::after{width:calc((100vw - 720px)/2)}
+  .key{min-height:72px}
+  .knob .dial{width:48px;height:48px}
+  .dsdigits .num{font-size:28px}
+  .chint{font-size:8px}
+}
 
 @media (prefers-reduced-motion: reduce){*{transition:none !important}}

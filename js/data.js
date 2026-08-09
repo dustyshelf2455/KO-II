@@ -174,6 +174,79 @@ const CTRL = {
 };
 ["pad0","pad1","pad2","pad3","pad4","pad5","pad6","pad7","pad8","pad9","paddot"].forEach(k=>CTRL[k]=CTRL.pad);
 
+/* Shift-box functions — opened by long-pressing the key that carries the box */
+CTRL.sfedit={name:"EDIT",sub:"shift + sound · sound edit",color:"#e9e6df",
+  blurb:"The boxed EDIT under SOUND. Hold SHIFT and press SOUND to open Sound Edit — trim start/end, shape the envelope, set pitch and time-stretch, pan, pick the play mode, and reverse a sample (OS 2.5).",
+  combos:[["SHIFT + SOUND","Open Sound Edit"],["KNOB X / Y","Edit the shown parameter"],["– / +","Move between parameters"],["Play mode","One-shot, legato, loop… + reverse (OS 2.5)"],["Hold SHIFT + SOUND (2s)","Save the edits — unverified"]]};
+CTRL.sfcommit={name:"COMMIT",sub:"shift + main · freeze a scene",color:"var(--orange)",
+  blurb:"The orange COMMIT box under MAIN. SHIFT + MAIN freezes the current scene and hands you a fresh copy to keep building on — the K.O. II way to stack intro → verse → chorus without stopping.",
+  combos:[["SHIFT + MAIN","Commit the scene"],["Hold MAIN, then – / +","Move between scenes"],["Hold MAIN + ENTER","Chain scenes in the song editor"]]};
+CTRL.sfloop={name:"LOOP",sub:"shift + tempo · performance loop",color:"#b7b3aa",
+  blurb:"The LOOP box under TEMPO. SHIFT + TEMPO drops an OB-4-style loop on the fly; hold the combo to set the loop length — it ends when you let go.",
+  combos:[["SHIFT + TEMPO","Drop a loop"],["Hold SHIFT + TEMPO","Set loop length by holding"]]};
+CTRL.sfchop={name:"CHOP",sub:"shift + sample · slice a sample",color:"#e9e6df",
+  blurb:"The CHOP box under SAMPLE. SHIFT + SAMPLE slices a sample across a group's pads — automatically, evenly (EQU, OS 2.5), or live as you tap along.",
+  combos:[["SHIFT + SAMPLE","Enter Chop"],["– / +","Number of slices"],["Hold a group pad, then – / +","Auto-chop mode — EQU = equal slices (OS 2.5)"],["Tap pads while playing","Live chop"],["KNOB X / Y","Fine-tune slice start / end"]]};
+CTRL.sfcorrect={name:"CORRECT",sub:"shift + timing · fix one pad",color:"#e9e6df",
+  blurb:"The CORRECT box under TIMING. SHIFT + TIMING opens Timing Correct — quantize the notes of a single pad and leave everything else exactly as you played it.",
+  combos:[["SHIFT + TIMING","Timing Correct"],["Pick a pad","Quantize just that pad"]]};
+CTRL.sfoutput={name:"OUTPUT",sub:"shift + fx · master section",color:"#e9e6df",
+  blurb:"The OUTPUT box under FX. SHIFT + FX opens the master output settings — the master compressor, and the sidechain settings behind +.",
+  combos:[["SHIFT + FX","Output / master compressor"],["then +","Sidechain settings"]]};
+CTRL.sfsystem={name:"SYSTEM",sub:"shift + erase · settings",color:"#b7b3aa",
+  blurb:"The SYSTEM box under ERASE. SHIFT + ERASE opens system settings — pad velocity, metronome, MIDI and sync, LED brightness, recording rates. Type a code and ENTER for quick access.",
+  combos:[["SHIFT + ERASE","Open system settings"],["301 / 302 / 300 + ENTER","Velocity high / low / off"],["400 + ENTER","Metronome on"],["MIDI → Clock","Sync off / on / out"]]};
+
+/* =========================================================================
+   Display icons — the segment screen's indicators.
+   The official guide documents 66 unique icons on this display; the set
+   below is what could be verified from guide text in this environment
+   (u:1 = plausible but not yet verified — see FIDELITY.md).
+   ========================================================================= */
+const DICONS = {
+  groups:{name:"GROUP TAGS  A–D",sub:"who's playing",
+    blurb:"The four group indicators. The active group's tag lights — red A, amber B, magenta C, blue D. This is where the group colors live on the real unit; the group keys themselves are grey."},
+  digits:{name:"THE BIG NUMBER",sub:"the main readout",
+    blurb:"The display's centerpiece. It shows whatever matters right now: the scene (S.01), the step position (1.1.1), the BPM, a sample number in Sound mode, system codes — and error codes (E.xx) if something's wrong."},
+  bar:{name:"BAR",sub:"where you are in the pattern",
+    blurb:"Lights with the current bar number while a pattern runs, so you always know where you are inside the loop — patterns can run up to 99 bars."},
+  mode:{name:"MODE LABEL",sub:"where you are",u:1,
+    blurb:"Shows the active mode — MAIN is home base; entering Sound, Sample, Tempo or FX takes over the display with that mode's readout. Press MAIN to come home."},
+  rec:{name:"REC DOT",sub:"recording",
+    blurb:"The red dot. Lit while the K.O. II is recording — live takes, step recording, fader automation, and hands-free sampling all light it."},
+  play:{name:"PLAY",sub:"pattern running",u:1,
+    blurb:"Lit while the sequencer runs. Playback starts and stops with the PLAY key, bottom-right of the unit."},
+  q:{name:"Q · QUANTIZE",sub:"snap to the grid",u:1,
+    blurb:"Quantize state. With quantize on, your hits snap to the note interval set in TIMING; press TIMING then – / + to switch between quantized and free time."},
+  note:{name:"NOTE VALUE",sub:"the grid resolution",u:1,
+    blurb:"Reflects the sequencer's note interval — 1/8, 1/16, triplets, 1/32 — set with TIMING + KNOB X. Swing (TIMING + KNOB Y) leans on 1/8 and 1/16."},
+  metro:{name:"METRONOME",sub:"the click",
+    blurb:"Blinks in time with the metronome. Turn the click on for record + play with system code 400; its volume is KNOB Y in Tempo mode."},
+  keysic:{name:"KEYBOARD",sub:"keys mode",u:1,
+    blurb:"Keys mode — the 12 pads become a chromatic keyboard for the selected sample. KEYS + – / + shifts octave; KEYS + a pad sets the root."},
+  punch:{name:"PUNCH-IN FX",sub:"live effects",u:1,
+    blurb:"Punch-in effects — hold FX and hit pads to throw effects at the running pattern, pressure-sensitive and stackable. The K.O. II's signature move."},
+  loop:{name:"LOOP",sub:"performance loop",u:1,
+    blurb:"The performance loop — SHIFT + TEMPO drops a loop on the fly; hold it to set the loop length. It ends when you let go."},
+  umb:{name:"UMBRELLA",sub:"undo is available",
+    blurb:"The famous umbrella — lit when an undo is available. SHIFT + GROUP B takes the last thing back. One level deep, so use it while it's lit."},
+  batt:{name:"BATTERY",sub:"power source",
+    blurb:"Lit when running on batteries; blinks when they're getting low. Disappears on USB power."},
+  usb:{name:"USB",sub:"usb connection",
+    blurb:"Lights when the K.O. II detects activity over USB — MIDI notes from a connected keyboard or computer, and on OS 2.5, USB audio in and out."},
+  midi:{name:"MIDI",sub:"midi input",
+    blurb:"Lights when incoming MIDI notes are detected. MIDI clock and sync behavior live in system settings (SHIFT + ERASE → MIDI)."},
+  mic:{name:"MIC",sub:"sampling input",
+    blurb:"Lit when the built-in microphone is the active sampling input. Pick the input with – / + inside Sample mode."},
+  line:{name:"LINE-IN",sub:"sampling input",
+    blurb:"Lit when the 3.5 mm line input is in use — your guitar, phone, or anything else you plug in. Mono, stereo, or single-channel L/R."},
+  meter:{name:"LEVEL METER",sub:"low · mid · level",
+    blurb:"A VU meter for the current signal — watch it while setting sampling gain with KNOB X so the take is hot but clean."},
+  clip:{name:"CLIP",sub:"too hot",
+    blurb:"Lights when the input clips. If you see it while sampling, back the gain off with KNOB X — a clipped take stays clipped."},
+};
+
+
 const RECIPES = [
   {t:"Your first beat, live",s:"New project to a committed loop in a minute",
    steps:[["Hold <span class='cmd'>MAIN + pad 6</span> for a clean, empty project."],

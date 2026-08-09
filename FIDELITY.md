@@ -43,6 +43,29 @@ owner's eyes on the actual hardware.
 - **Hold ERASE + MAIN (2 s)** → clear/delete scene
 - **Hold SHIFT + SOUND (2 s)** → save sound edits
 
+## The display replica (added after Milestone 1)
+
+The official guide states the display carries **66 unique icons** and lists
+each one — but that page (teenage.engineering/guides/ep-133/screen) is
+unreachable from this build environment. The replica currently renders the
+indicators that could be verified from guide text, plus a few flagged ones:
+
+**Verified via guide text:** group tags A–D · BAR + bar number · main
+digits · umbrella (undo available) · metronome (blinks in time) · battery
+(lit on battery, blinks low) · USB · MIDI (light on detected input) · MIC ·
+LINE-IN (lit per sampling input) · LOW/MID level meter (VU) · CLIP (lit on
+input clip) · REC dot.
+
+**Included but flagged `unverified` in-app:** play, Q/quantize, note value,
+keys-mode keyboard, punch-in FX, loop, and the MAIN mode label's exact
+behavior.
+
+**Not yet represented:** the remainder of the 66 icons, and the true
+positions of everything — the current arrangement is an informed layout,
+not a traced one. **One clear photo of the owner's display** (ideally
+during boot, when segment displays typically light everything) settles
+inventory, positions, and shapes in one pass.
+
 ## Owner checklist — needs your unit (or a photo of it)
 
 The Map is verified for layout, key colors by role, main labels, and

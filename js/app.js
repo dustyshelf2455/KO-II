@@ -1,35 +1,56 @@
 /* ---- tabs ---- */
-const hints={map:"tap a control",combos:"search shortcuts",learn:"follow along",stuck:"quick fixes"};
-const scrHint=document.getElementById('scr-hint');
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click',()=>{
     const go=t.dataset.go;
     document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
     ['map','combos','learn','stuck'].forEach(id=>document.getElementById(id).hidden=(id!==go));
-    scrHint.textContent=hints[go]; window.scrollTo(0,0);
+    window.scrollTo(0,0);
   });
 });
 
-/* ---- control sheet ---- */
+/* ---- sheet ---- */
 const sheet=document.getElementById('sheet'),scrim=document.getElementById('scrim'),sbody=document.getElementById('sheet-body');
+const UTAG='<span class="utag" title="Not yet re-verified against the official guide — treat with care">unverified</span>';
+function showSheet(html){sbody.innerHTML=html;sheet.classList.add('on');scrim.classList.add('on');}
+function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');}
+scrim.addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+
 function openSheet(id){
   const c=CTRL[id]; if(!c) return;
-  let h=`<div class="stag"><span class="swatch" style="background:${c.color}"></span>control</div>`;
+  let h=`<div class="stag"><span class="swatch" style="background:${c.color}"></span>${id.startsWith('sf')?'shift function':'control'}</div>`;
   h+=`<h2>${c.name}</h2><div class="ssub mono">${c.sub}</div><div class="sblurb">${c.blurb}</div>`;
   if(c.combos&&c.combos.length){h+=`<div class="scmb">combos</div>`;
     c.combos.forEach(([k,a])=>h+=`<div class="combo"><div class="k">${k}</div><div class="a">${a}</div></div>`);}
-  sbody.innerHTML=h; sheet.classList.add('on'); scrim.classList.add('on');
+  showSheet(h);
 }
-function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');}
-scrim.addEventListener('click',closeSheet);
+
+function openIcon(btn){
+  const d=DICONS[btn.dataset.icon]; if(!d) return;
+  btn.classList.add('lit');                          // stays lit after the sheet closes
+  let h=`<div class="stag"><span class="swatch" style="background:var(--amber)"></span>display icon</div>`;
+  h+=`<h2>${d.name}</h2><div class="ssub mono">${d.sub}${d.u?' '+UTAG:''}</div><div class="sblurb">${d.blurb}</div>`;
+  showSheet(h);
+}
+document.querySelectorAll('.dicon').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openIcon(b);}));
+
+/* ---- keys: tap = control info · long-press = the boxed shift function ---- */
+const LP_MS=500;
+document.querySelector('.device').addEventListener('contextmenu',e=>e.preventDefault());
 document.querySelectorAll('.device .key').forEach(k=>{
   if(k.hasAttribute('data-noop'))return;
-  k.addEventListener('click',()=>openSheet(k.dataset.id));
-});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
-const devNum=document.getElementById('dev-num');
-document.querySelector('.device').addEventListener('click',()=>{
-  const s=['S.01','S.02','1.1.1','1.2.3','2.1.1'];devNum.textContent=s[Math.floor(Math.random()*s.length)];
+  let timer=null,fired=false;
+  if(k.dataset.shift){
+    k.addEventListener('pointerdown',()=>{fired=false;timer=setTimeout(()=>{
+      fired=true;openSheet(k.dataset.shift);
+      if(navigator.vibrate)navigator.vibrate(12);
+    },LP_MS);});
+    ['pointerup','pointerleave','pointercancel'].forEach(ev=>k.addEventListener(ev,()=>clearTimeout(timer)));
+  }
+  k.addEventListener('click',()=>{
+    if(fired){fired=false;return;}                   // long-press already opened the shift sheet
+    openSheet(k.dataset.id);
+  });
 });
 
 /* ---- combos ---- */
@@ -42,7 +63,6 @@ const chipsEl=document.getElementById('chips');
 });
 const qEl=document.getElementById('q'),listEl=document.getElementById('combo-list');
 qEl.addEventListener('input',renderCombos);
-const UTAG='<span class="utag" title="Not yet re-verified against the official guide — treat with care">unverified</span>';
 function renderCombos(){
   const q=qEl.value.trim().toLowerCase();
   let rows=COMBOS.filter(([cat,k,a])=>(activeCat==='All'||cat===activeCat)&&(!q||(cat+' '+k+' '+a).toLowerCase().includes(q)));
@@ -72,10 +92,8 @@ FIXES.forEach(f=>{
 });
 
 /* ---- firmware / content stamp ---- */
-const metaText=`content targets <b>${META.device} · OS ${META.os}</b> · checked ${META.checked}<br>combos can change with firmware updates`;
-['metaline-map','metaline-combos'].forEach(id=>{
-  const el=document.getElementById(id); if(el) el.innerHTML=metaText;
-});
+const metaEl=document.getElementById('metaline-combos');
+if(metaEl) metaEl.innerHTML=`content targets <b>${META.device} · OS ${META.os}</b> · checked ${META.checked}<br>combos can change with firmware updates`;
 
 /* ---- offline (service worker) ---- */
 if('serviceWorker' in navigator){
