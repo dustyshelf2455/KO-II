@@ -41,7 +41,10 @@ owner's eyes on the actual hardware.
 ## Still unverified — marked in the app with an `unverified` tag
 
 - **Hold ERASE + MAIN (2 s)** → clear/delete scene
-- **Hold SHIFT + SOUND (2 s)** → save sound edits
+- ~~Hold SHIFT + SOUND (2 s) → save sound edits~~ **Resolved**: the real
+  behavior is *crop-to-file*, done by holding SHIFT + SOUND on the Trim
+  page (permanent). Sound-edit changes are otherwise per-project and
+  automatic. Combos entry corrected and unflagged.
 
 ## The display replica — traced from the owner's unit
 
@@ -98,6 +101,16 @@ Carried through with the library's own caveat intact: the backup/restore
 entry notes the method has evolved across firmware and should be confirmed
 in the official guide. Items tagged as concepts are grouped under a
 "Concepts · general guidance" header, framed as practice, not device docs.
+
+**Deep verification pass** (owner asked for library claims to be resolved
+against the real device): confirmed correct — exact-bars hands-free
+sampling (– / + then PLAY), trim knob mapping + SHIFT 1-second zoom +
+destructive crop, the full sidechain procedure, play modes (one-shot /
+key / legato), sampling threshold on KNOB Y. Verified enrichments added —
+resample shows **RSP** on screen; sidechain duck is shaped with KNOB X
+(length) / KNOB Y (shape); Sound Edit's six pages (play mode, trim,
+envelope, time stretch, per-pad MIDI channel, mute groups) with edits
+per-project except crop.
 
 ## Still open
 
