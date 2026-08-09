@@ -43,48 +43,50 @@ owner's eyes on the actual hardware.
 - **Hold ERASE + MAIN (2 s)** → clear/delete scene
 - **Hold SHIFT + SOUND (2 s)** → save sound edits
 
-## The display replica (added after Milestone 1)
+## The display replica — traced from the owner's unit
 
-The official guide states the display carries **66 unique icons** and lists
-each one — but that page (teenage.engineering/guides/ep-133/screen) is
-unreachable from this build environment. The replica currently renders the
-indicators that could be verified from guide text, plus a few flagged ones:
+The owner supplied two photos of the real 128 MB unit: one at boot with
+**every segment lit**, one mid-session in Main mode. The replica's icon
+inventory, positions, and row structure are now traced from those photos
+(~55 elements across 4 rows). The mid-session photo also validated the
+default lit state (pad grids, group A, 1.1.1 digits with BAR/TIC, MAIN).
 
-**Verified via guide text:** group tags A–D · BAR + bar number · main
-digits · umbrella (undo available) · metronome (blinks in time) · battery
-(lit on battery, blinks low) · USB · MIDI (light on detected input) · MIC ·
-LINE-IN (lit per sampling input) · LOW/MID level meter (VU) · CLIP (lit on
-input clip) · REC dot.
+**Meanings verified** (guide text or unambiguous): group tags · pad grids'
+existence · SYNC · MIDI · BAR/TIC position readout · digits · BPM · level
+meter · STEREO/MONO input modes · metronome · scissors/chop · umbrella ·
+REC · PLAY · FX · Q + FREE · COPY/PASTE · SOUND/MAIN/TEMPO/ERASE/SYSTEM
+mode labels · CLIP · SWING · keys keyboard.
 
-**Included but flagged `unverified` in-app:** play, Q/quantize, note value,
-keys-mode keyboard, punch-in FX, loop, and the MAIN mode label's exact
-behavior.
+**Traced but meaning flagged `unverified` in-app:** tape, whistle and
+pixel-art corner illustrations · battery/power capsule · floppy (save) ·
+stopwatch · four-color wheel · right-side dot grids · note/trim/envelope/
+stretch cluster · loop arrow · big arrow · tube · fader glyph · headphones ·
+burst ✳ · MUTE bubble's exact trigger. The guide's screen page (66 icons,
+egress-blocked here) or simply using the unit will settle these — owner:
+when one of them lights, say so and it gets verified.
 
-**Not yet represented:** the remainder of the 66 icons, and the true
-positions of everything — the current arrangement is an informed layout,
-not a traced one. **One clear photo of the owner's display** (ideally
-during boot, when segment displays typically light everything) settles
-inventory, positions, and shapes in one pass.
+## Control-surface corrections made from the photos
 
-## Owner checklist — needs your unit (or a photo of it)
+- The seven shift functions are **separate lower keycaps** (SOUND/EDIT,
+  MAIN/COMMIT-red, TEMPO/LOOP-grey, SAMPLE/CHOP, TIMING/CORRECT,
+  FX/OUTPUT, ERASE/SYSTEM-both-white) — now rendered as two-cap keys.
+- SHIFT is a **light key**, not black. SAMPLE and RECORD are white-on-red.
+- Knob silkscreen: BPM over X, METRONOME over Y, boxed x/y tags under the
+  dials; VOLUME spelled out. (GAIN/SWING bracket text lives in the sheets.)
+- Fader-label LED dots and per-group LEDs added (A lit red as in Main).
+- Pad 6's label corrected to **→FX**; the full above-pad mapping
+  (LEVEL/PITCH/TIME · LPF/HPF/→FX · ATK/REL/PAN · TUNE/VEL/MOD) is
+  photo-confirmed.
+- Group key symbols photo-confirmed: A ✳ · B undo-hook · C ↑ · D ↓.
+- Added the top-edge port tabs (OUTPUT/INPUT/SYNC·MIDI/USB/POWER), the
+  K.O. II / サンプラー / "128 MB SAMPLER COMPOSER" label panel, and the
+  speaker grille.
 
-The Map is verified for layout, key colors by role, main labels, and
-shift-box labels (EDIT / COMMIT / LOOP / CHOP / CORRECT / OUTPUT / SYSTEM).
-These finer silkscreen details couldn't be confirmed from this environment:
+## Still open
 
-1. **Group keys A–D** — the Map shows small symbols (✳ ↵ ↑ ↓) under the
-   letters. What, if anything, is actually printed on yours?
-2. **Knobs** — are the two right-hand knobs labeled X / Y (or anything) on
-   the faceplate? Is the volume knob labeled?
-3. **Display replica** — the on-screen segment display is stylized. A photo
-   of yours mid-session would let us match the real segment layout
-   (umbrella, BAR, Q, group tags, etc.).
-4. **Key colors** — confirm: SAMPLE and RECORD orange, ERASE/–/+ white,
-   PLAY grey, everything else dark — matches your 128 MB unit?
-5. **Fader cap + slider** — color/shape right?
-6. **E.10** — grouped with E.11/E.12 as a file-system error; E.11/E.12 are
-   confirmed, E.10 is assumed. If your unit ever shows it, tell me what the
-   guide's error table says.
+- **E.10** — grouped with E.11/E.12 as a file-system error; E.11/E.12 are
+  confirmed, E.10 is assumed.
+- The unverified icon meanings listed above.
 
 Corrections land in `js/data.js` (facts) and `index.html` (Map markup) —
 both are plain text, easy to patch.

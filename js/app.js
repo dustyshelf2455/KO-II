@@ -47,8 +47,9 @@ document.querySelectorAll('.device .key').forEach(k=>{
     },LP_MS);});
     ['pointerup','pointerleave','pointercancel'].forEach(ev=>k.addEventListener(ev,()=>clearTimeout(timer)));
   }
-  k.addEventListener('click',()=>{
+  k.addEventListener('click',e=>{
     if(fired){fired=false;return;}                   // long-press already opened the shift sheet
+    if(k.dataset.shift&&e.target.closest('.bot')){openSheet(k.dataset.shift);return;}  // lower cap = shift fn
     openSheet(k.dataset.id);
   });
 });
