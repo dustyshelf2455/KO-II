@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>K.O. II — coach</title>
+<style>
+  :root{
+    --ink:#ece7dc; --dim:#8f8778; --faint:#5c564b;
+    --bg:#16130e; --panel:#211d16; --panel2:#2a251c;
+    --line:rgba(236,231,220,.10); --line2:rgba(236,231,220,.18);
+    --orange:#ff5a1f; --amber:#ffb023;
+    --body:#d6d3cb; --bodyhi:#e4e1da; --bodylo:#c3c0b7;
+    --blk:#17140f; --blktxt:#e9e6df;
+    --wht:#eae7e0; --whttxt:#1a1712;
+    --grey:#9a968c;
+    --gA:#e5392b; --gB:#e0a82e; --gC:#d1348a; --gD:#2f74e8;
+    --sheet:#1c1811;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+    padding-bottom:calc(84px + var(--safe-b));
+  }
+  .mono{font-family:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace}
+  h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.01em}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+
+  .wrap{max-width:520px;margin:0 auto;padding:0 16px}
+
+  header{position:sticky;top:0;z-index:30;background:var(--bg);padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+  .screen{max-width:520px;margin:0 auto;background:linear-gradient(180deg,#0d0b07,#151009);
+    border:1px solid rgba(255,176,35,.18);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;
+    box-shadow:inset 0 0 26px rgba(255,120,20,.06)}
+  .screen .brand{color:var(--amber);font-weight:700;font-size:13px;letter-spacing:.16em}
+  .screen .hint{color:#c9a86a;font-size:11px;letter-spacing:.14em;margin-left:auto;text-align:right;text-transform:uppercase}
+  .screen .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange)}
+
+  main{padding-top:16px}
+  section[hidden]{display:none}
+  .lede{color:var(--dim);font-size:13.5px;margin:2px 0 16px}
+  .eyebrow{font-size:11px;letter-spacing:.18em;color:var(--orange);text-transform:uppercase;margin-bottom:6px}
+
+  /* ===== faithful device ===== */
+  .device{background:linear-gradient(180deg,var(--bodyhi),var(--body) 22%,var(--bodylo));
+    border-radius:20px;padding:14px 12px 16px;
+    box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 6px rgba(0,0,0,.12)}
+
+  /* device screen replica */
+  .dscreen{background:#0c0a06;border-radius:9px;padding:8px 10px;margin-bottom:13px;
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;font-family:ui-monospace,monospace;
+    box-shadow:inset 0 0 20px rgba(255,120,20,.05)}
+  .dscreen .grp{display:flex;flex-direction:column;gap:3px}
+  .dscreen .grp b{display:flex;align-items:center;gap:5px;font-size:8px;color:#6a6459;letter-spacing:.1em}
+  .dscreen .grp i{width:16px;height:7px;border-radius:2px;display:inline-block;font-style:normal}
+  .dscreen .mid{text-align:center}
+  .dscreen .bar{display:inline-block;background:#e5392b;color:#fff;font-size:8px;font-weight:700;
+    padding:1px 4px;border-radius:2px;letter-spacing:.06em;vertical-align:middle;margin-right:6px}
+  .dscreen .num{color:#a9c6ff;font-size:24px;font-weight:700;letter-spacing:.12em;text-shadow:0 0 9px rgba(120,160,255,.55)}
+  .dscreen .rt{display:flex;gap:4px;align-items:center;opacity:.85}
+  .dscreen .rt span{width:7px;height:7px;border-radius:2px;background:#3a342a}
+  .dscreen .rt .q{color:#efe9dd;font-size:13px;font-weight:700;background:none;width:auto;height:auto}
+  .dscreen .pill{grid-column:1 / -1;display:flex;align-items:center;gap:6px;margin-top:4px}
+  .dscreen .pill .main{background:var(--orange);color:#1a0d05;font-size:9px;font-weight:700;padding:2px 10px;border-radius:3px;letter-spacing:.1em}
+  .dscreen .pill .rec{width:9px;height:9px;border-radius:50%;background:#e5392b;box-shadow:0 0 7px #e5392b}
+
+  .surface{display:grid;grid-template-columns:.82fr .82fr 1fr 1fr 1fr 1.04fr 1.04fr;grid-auto-rows:1fr;gap:6px}
+
+  .key{-webkit-tap-highlight-color:transparent;position:relative;border-radius:9px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    padding:8px 3px 6px;min-height:58px;text-align:center;
+    transition:transform .05s ease, filter .1s ease;border:1px solid rgba(0,0,0,.35)}
+  .key:active{transform:translateY(1px) scale(.985);filter:brightness(1.18)}
+  .key .lab{font-family:ui-monospace,monospace;font-weight:700;letter-spacing:.02em;line-height:1;font-size:10.5px}
+  .key .sub{font-family:ui-monospace,monospace;font-size:6.8px;font-weight:700;letter-spacing:.08em;
+    padding:1.5px 4px;border-radius:3px;line-height:1;text-transform:uppercase}
+
+  .k-blk{background:linear-gradient(180deg,#211d17,#151109);color:var(--blktxt);border-color:#000}
+  .k-wht{background:linear-gradient(180deg,#f0ede6,var(--wht));color:var(--whttxt);border-color:#bdb9b0}
+  .k-orange{background:linear-gradient(180deg,#ff6a30,#ec4a12);color:#1a0d05;border-color:#c8410f}
+  .k-grey{background:linear-gradient(180deg,#a7a399,#8e8a80);color:#14110d;border-color:#78756c}
+
+  /* sub-box colors */
+  .sb-wht{background:#e9e6df;color:#1a1712}
+  .sb-org{background:var(--orange);color:#1a0d05}
+  .sb-grey{background:#b7b3aa;color:#211d17}
+  .k-wht .sb-wht{background:#d7d3ca}
+
+  /* number pads */
+  .k-pad{background:linear-gradient(180deg,#211d17,#141009);color:#efece5;border-color:#000}
+  .k-pad .num{font-family:ui-monospace,monospace;font-size:16px;font-weight:700;line-height:1}
+  .k-pad .top{position:absolute;top:3px;font-size:6px;letter-spacing:.08em;color:#8a8478;font-family:ui-monospace,monospace}
+  .k-pad .bot{position:absolute;bottom:3px;font-size:6.2px;letter-spacing:.06em;color:#8a8478;font-family:ui-monospace,monospace}
+
+  /* group keys — faithful light-grey body, colored accent stripe */
+  .k-grp{background:linear-gradient(180deg,#f0ede6,#dcd9d1);color:#1a1712;border-color:#c0bcb3;overflow:hidden}
+  .k-grp .lab{font-size:15px}
+  .k-grp .sym{font-family:ui-monospace,monospace;font-size:8px;color:#7a766d;line-height:1}
+  .k-grp .stripe{position:absolute;left:0;right:0;bottom:0;height:4px}
+  .k-grp[data-id=groupa] .stripe{background:var(--gA)} .k-grp[data-id=groupb] .stripe{background:var(--gB)}
+  .k-grp[data-id=groupc] .stripe{background:var(--gC)} .k-grp[data-id=groupd] .stripe{background:var(--gD)}
+
+  /* knobs */
+  .knob{min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .knob .dial{width:40px;height:40px;border-radius:50%;position:relative;border:1px solid rgba(0,0,0,.4);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.25), inset 0 -3px 5px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.25)}
+  .knob .dial::after{content:"";position:absolute;top:4px;left:50%;transform:translateX(-50%);width:3px;height:11px;border-radius:2px;background:rgba(0,0,0,.55)}
+  .knob.vol .dial{background:radial-gradient(circle at 40% 34%,#fbf9f4,#dedbd3)}
+  .knob.bpm .dial{background:radial-gradient(circle at 40% 34%,#ff7d47,#e2480f)}
+  .knob.bpm .dial::after{background:rgba(255,255,255,.85)}
+  .knob.met .dial{background:radial-gradient(circle at 40% 34%,#37332b,#14110c)}
+  .knob.met .dial::after{background:#e9e6df}
+  .knob .kl{font-family:ui-monospace,monospace;font-size:7.5px;letter-spacing:.08em;color:#4a463d;text-transform:uppercase}
+
+  /* fader slider */
+  .slider{min-height:58px;display:flex;align-items:center;justify-content:center}
+  .slider .track{width:6px;height:74%;border-radius:4px;background:#b6b2a9;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+  .slider .cap{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:26px;height:13px;border-radius:3px;
+    background:linear-gradient(180deg,#efece5,#c9c6bd);border:1px solid #a9a59c;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+
+  .maphelp{color:var(--dim);font-size:12px;text-align:center;margin-top:14px;line-height:1.5}
+
+  /* ===== combos ===== */
+  .searchbar{position:relative;margin-bottom:12px}
+  .searchbar input{width:100%;background:var(--panel);border:1px solid var(--line2);color:var(--ink);
+    border-radius:12px;padding:13px 14px 13px 40px;font-size:15px}
+  .searchbar input::placeholder{color:var(--faint)}
+  .searchbar svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5}
+  .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{white-space:nowrap;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;border-radius:20px;
+    background:var(--panel);border:1px solid var(--line2);color:var(--dim);font-family:ui-monospace,monospace}
+  .chip.on{background:var(--orange);color:#1a0d05;border-color:var(--orange);font-weight:700}
+  .cathead{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;color:var(--orange);
+    text-transform:uppercase;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .combo{display:flex;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line);align-items:baseline}
+  .combo .k{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--amber);flex:0 0 42%;line-height:1.35;font-weight:600}
+  .combo .a{font-size:13.5px;color:var(--ink);flex:1}
+  .empty{color:var(--dim);text-align:center;padding:30px 0;font-size:14px}
+
+  /* ===== learn ===== */
+  .recipe{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .recipe > button{width:100%;text-align:left;padding:15px 16px;display:flex;align-items:center;gap:12px}
+  .recipe .rnum{font-family:ui-monospace,monospace;font-size:11px;color:var(--orange);border:1px solid var(--orange);border-radius:6px;padding:3px 6px;flex:0 0 auto}
+  .recipe .rt{font-weight:700;font-size:15px}
+  .recipe .rs{font-size:12px;color:var(--dim);margin-top:2px}
+  .recipe .caret{margin-left:auto;color:var(--dim);transition:transform .2s}
+  .recipe.open .caret{transform:rotate(90deg)}
+  .steps{padding:0 16px 4px;display:none}
+  .recipe.open .steps{display:block}
+  .step{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+  .step .sn{font-family:ui-monospace,monospace;font-size:12px;color:var(--amber);flex:0 0 20px;padding-top:1px}
+  .step .sx{font-size:13.5px}.step .sx b{color:var(--ink)}
+  .step .sx .cmd{font-family:ui-monospace,monospace;color:var(--amber);font-size:12.5px}
+  .tip{display:flex;gap:9px;background:rgba(255,90,31,.09);border:1px solid rgba(255,90,31,.25);border-radius:10px;
+    padding:11px 12px;margin:6px 0 16px;font-size:13px;color:#f4d9c7}.tip b{color:var(--orange)}
+
+  /* ===== stuck ===== */
+  .fix{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+  .fix > button{width:100%;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14.5px}
+  .fix .caret{margin-left:auto;color:var(--dim);transition:transform .2s}.fix.open .caret{transform:rotate(90deg)}
+  .fix .body{display:none;padding:0 16px 15px;font-size:13.5px}.fix.open .body{display:block}
+  .fix .body .cause{color:var(--dim);margin-bottom:8px}
+  .fix .body .do{background:var(--panel2);border-left:2px solid var(--orange);padding:10px 12px;border-radius:0 8px 8px 0}
+  .fix .body .do .cmd{font-family:ui-monospace,monospace;color:var(--amber)}
+
+  /* ===== sheet ===== */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--sheet);border-top:1px solid var(--line2);
+    border-radius:20px 20px 0 0;padding:10px 20px calc(26px + var(--safe-b));transform:translateY(102%);
+    transition:transform .26s cubic-bezier(.2,.8,.2,1);max-width:520px;margin:0 auto;max-height:78vh;overflow-y:auto}
+  .sheet.on{transform:translateY(0)}
+  .grab{width:38px;height:4px;border-radius:3px;background:var(--faint);margin:4px auto 14px}
+  .sheet .stag{display:inline-flex;align-items:center;gap:8px;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
+  .sheet .stag .swatch{width:10px;height:10px;border-radius:3px}
+  .sheet h2{font-size:22px;margin-bottom:3px}
+  .sheet .ssub{font-family:ui-monospace,monospace;color:var(--amber);font-size:12px;margin-bottom:12px}
+  .sheet .sblurb{font-size:14.5px;color:var(--ink);margin-bottom:16px}
+  .sheet .scmb{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.16em;color:var(--orange);text-transform:uppercase;margin-bottom:8px}
+  .sheet .combo:last-child{border-bottom:none}
+
+  /* ===== nav ===== */
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(18,15,11,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+  .navin{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+  .tab{padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--faint)}
+  .tab .tl{font-size:10.5px;letter-spacing:.06em;font-family:ui-monospace,monospace;text-transform:uppercase}
+  .tab.on{color:var(--orange)}.tab svg{width:22px;height:22px}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="screen">
+    <span class="dot"></span><span class="brand mono">K.O. II</span>
+    <span class="hint mono" id="scr-hint">tap a control</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== MAP ===== -->
+  <section id="map">
+    <div class="eyebrow">your device, 1:1</div>
+    <p class="lede">This mirrors your unit's real layout, labels and colors. Tap any control to see exactly what it does and every combo it's part of.</p>
+
+    <div class="device" role="group" aria-label="K.O. II — faithful control map">
+      <!-- screen replica -->
+      <div class="dscreen">
+        <div class="grp">
+          <b><i style="background:var(--gA)"></i>A</b><b><i style="background:var(--gB)"></i>B</b>
+          <b><i style="background:var(--gC)"></i>C</b><b><i style="background:var(--gD)"></i>D</b>
+        </div>
+        <div class="mid"><span class="bar">BAR</span><span class="num" id="dev-num">S.01</span></div>
+        <div class="rt"><span></span><span></span><span></span><span class="q">Q</span></div>
+        <div class="pill"><span class="main">MAIN</span><span class="rec"></span></div>
+      </div>
+
+      <!-- control surface: 7 cols × 5 rows, true positions -->
+      <div class="surface">
+        <!-- row 1 -->
+        <button class="key knob vol" data-id="volume" style="grid-column:1;grid-row:1"><span class="dial"></span><span class="kl">vol</span></button>
+        <button class="key k-blk" data-id="sound" style="grid-column:2;grid-row:1"><span class="lab">SOUND</span><span class="sub sb-wht">edit</span></button>
+        <button class="key k-blk" data-id="main" style="grid-column:3;grid-row:1"><span class="lab">MAIN</span><span class="sub sb-org">commit</span></button>
+        <button class="key k-blk" data-id="tempo" style="grid-column:4;grid-row:1"><span class="lab">TEMPO</span><span class="sub sb-grey">loop</span></button>
+        <div style="grid-column:5;grid-row:1"></div>
+        <button class="key knob bpm" data-id="knobx" style="grid-column:6;grid-row:1"><span class="dial"></span><span class="kl">gain · x</span></button>
+        <button class="key knob met" data-id="knoby" style="grid-column:7;grid-row:1"><span class="dial"></span><span class="kl">swing · y</span></button>
+
+        <!-- row 2 -->
+        <button class="key k-blk" data-id="keys" style="grid-column:1;grid-row:2"><span class="lab">KEYS</span></button>
+        <button class="key k-grp" data-id="groupa" style="grid-column:2;grid-row:2"><span class="lab">A</span><span class="sym">✳</span><span class="stripe"></span></button>
+        <button class="key k-pad" data-id="pad7" style="grid-column:3;grid-row:2"><span class="top">level</span><span class="num">7</span><span class="bot">lpf</span></button>
+        <button class="key k-pad" data-id="pad8" style="grid-column:4;grid-row:2"><span class="top">pitch</span><span class="num">8</span><span class="bot">hpf</span></button>
+        <button class="key k-pad" data-id="pad9" style="grid-column:5;grid-row:2"><span class="top">time</span><span class="num">9</span><span class="bot">→fx</span></button>
+        <button class="key k-orange" data-id="sample" style="grid-column:6;grid-row:2"><span class="lab">SAMPLE</span><span class="sub sb-wht">chop</span></button>
+        <button class="key k-blk" data-id="timing" style="grid-column:7;grid-row:2"><span class="lab">TIMING</span><span class="sub sb-wht">correct</span></button>
+
+        <!-- row 3 -->
+        <button class="key k-blk" data-id="fader" style="grid-column:1;grid-row:3"><span class="lab">FADER</span></button>
+        <button class="key k-grp" data-id="groupb" style="grid-column:2;grid-row:3"><span class="lab">B</span><span class="sym">↵</span><span class="stripe"></span></button>
+        <button class="key k-pad" data-id="pad4" style="grid-column:3;grid-row:3"><span class="num">4</span><span class="bot">atk</span></button>
+        <button class="key k-pad" data-id="pad5" style="grid-column:4;grid-row:3"><span class="num">5</span><span class="bot">rel</span></button>
+        <button class="key k-pad" data-id="pad6" style="grid-column:5;grid-row:3"><span class="num">6</span><span class="bot">pan</span></button>
+        <button class="key k-blk" data-id="fx" style="grid-column:6;grid-row:3"><span class="lab">FX</span><span class="sub sb-wht">output</span></button>
+        <button class="key k-wht" data-id="erase" style="grid-column:7;grid-row:3"><span class="lab">ERASE</span><span class="sub sb-grey">system</span></button>
+
+        <!-- row 4 -->
+        <div class="key slider" data-noop style="grid-column:1;grid-row:4;background:none;border:none;box-shadow:none"><div class="track"><div class="cap"></div></div></div>
+        <button class="key k-grp" data-id="groupc" style="grid-column:2;grid-row:4"><span class="lab">C</span><span class="sym">↑</span><span class="stripe"></span></button>
+        <button class="key k-pad" data-id="pad1" style="grid-column:3;grid-row:4"><span class="num">1</span><span class="bot">tune</span></button>
+        <button class="key k-pad" data-id="pad2" style="grid-column:4;grid-row:4"><span class="num">2</span><span class="bot">vel</span></button>
+        <button class="key k-pad" data-id="pad3" style="grid-column:5;grid-row:4"><span class="num">3</span><span class="bot">mod</span></button>
+        <button class="key k-wht" data-id="minus" style="grid-column:6;grid-row:4"><span class="lab" style="font-size:16px">–</span></button>
+        <button class="key k-wht" data-id="plus" style="grid-column:7;grid-row:4"><span class="lab" style="font-size:16px">+</span></button>
+
+        <!-- row 5 -->
+        <button class="key k-blk" data-id="shift" style="grid-column:1;grid-row:5"><span class="lab">SHIFT</span></button>
+        <button class="key k-grp" data-id="groupd" style="grid-column:2;grid-row:5"><span class="lab">D</span><span class="sym">↓</span><span class="stripe"></span></button>
+        <button class="key k-pad" data-id="paddot" style="grid-column:3;grid-row:5"><span class="num">·</span></button>
+        <button class="key k-pad" data-id="pad0" style="grid-column:4;grid-row:5"><span class="num">0</span></button>
+        <button class="key k-pad" data-id="enter" style="grid-column:5;grid-row:5"><span class="lab" style="font-size:9px">ENTER</span></button>
+        <button class="key k-orange" data-id="record" style="grid-column:6;grid-row:5"><span class="lab" style="font-size:8.5px">RECORD</span></button>
+        <button class="key k-grey" data-id="play" style="grid-column:7;grid-row:5"><span class="lab" style="font-size:10px">PLAY</span></button>
+      </div>
+    </div>
+    <p class="maphelp">Positions, labels and shift-boxes match your unit. Group keys are grey like the real device — their red / amber / magenta / blue only appears on the screen, so that's where the color lives here too.</p>
+  </section>
+
+  <!-- ===== COMBOS ===== -->
+  <section id="combos" hidden>
+    <div class="eyebrow">every shortcut, searchable</div>
+    <div class="searchbar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search — try 'undo', 'sample', 'swing'…" autocomplete="off" autocapitalize="off">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div id="combo-list"></div>
+  </section>
+
+  <!-- ===== LEARN ===== -->
+  <section id="learn" hidden>
+    <div class="eyebrow">step by step</div>
+    <p class="lede">Short walkthroughs for the moves that build a track. Tap one and follow along on the unit.</p>
+    <div id="recipe-list"></div>
+  </section>
+
+  <!-- ===== STUCK ===== -->
+  <section id="stuck" hidden>
+    <div class="eyebrow">i did something and…</div>
+    <p class="lede">The stuff that stops new owners cold, and the exact fix for each.</p>
+    <div id="fix-list"></div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Control detail">
+  <div class="grab"></div><div id="sheet-body"></div>
+</div>
+
+<nav><div class="navin">
+  <button class="tab on" data-go="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="tl">map</span></button>
+  <button class="tab" data-go="combos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="tl">combos</span></button>
+  <button class="tab" data-go="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h10M4 12h16M4 19h12"/><circle cx="19" cy="5" r="1.6" fill="currentColor" stroke="none"/></svg><span class="tl">learn</span></button>
+  <button class="tab" data-go="stuck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 015 .8c0 1.7-2.5 2-2.5 4"/><circle cx="12" cy="17.5" r="1" fill="currentColor" stroke="none"/></svg><span class="tl">stuck</span></button>
+</div></nav>
+
+<script>
+const COMBOS = [
+  ["Projects","Hold MAIN + pad 1–9","Switch to that project (a project = one song)"],
+  ["Projects","Hold MAIN + pad 6–9","Open a factory-empty project to start clean"],
+  ["Scenes","Hold MAIN, then – / +","Move through scenes 01–99 (a scene = a section)"],
+  ["Scenes","Hold MAIN + type a number","Jump straight to that scene"],
+  ["Scenes","SHIFT + MAIN","Commit — freeze this scene and get a fresh copy to build on"],
+  ["Song","Hold MAIN + ENTER","Open the song editor to chain scenes into an arrangement"],
+  ["Song","SHIFT + GROUP A (in song editor)","Add a new scene slot to the song"],
+  ["Song","SHIFT + – / + (in song editor)","Change which scene plays at this spot"],
+  ["Song","SHIFT + PLAY","Play the whole song from the start"],
+  ["Sounds","SOUND → group → pad","Pick a pad to load a sound onto"],
+  ["Sounds","– / +  (in Sound)","Scroll samples on the selected pad"],
+  ["Sounds","SHIFT + – / +  (in Sound)","Jump through samples ten at a time"],
+  ["Sounds","Hold SOUND + type a number","Load a specific sample by number"],
+  ["Sounds","Hold a pad (in Sound)","Preview the sample's name"],
+  ["Sounds","SHIFT + SOUND","Sound Edit — trim, envelope, time-stretch, pan, play mode"],
+  ["Sounds","Hold SHIFT + SOUND (2 sec)","Save your sound edits"],
+  ["Recording","Tap RECORD, then PLAY","Live record with a 4-beat count-in"],
+  ["Recording","RECORD + PLAY together","Live record with no count-in"],
+  ["Recording","Hold RECORD + a pad","Step-record that pad onto the current step"],
+  ["Recording","RECORD, then SHIFT + PLAY","Record from the very start of the pattern"],
+  ["Recording","Play, then hold RECORD + pads","Overdub onto a running pattern"],
+  ["Recording","RECORD, ERASE, +","Overwrite the old take as you record a new one"],
+  ["Recording","Hold RECORD + move the FADER","Record fader (filter, level, etc.) movement"],
+  ["Steps & length","Hold RECORD + – / +","Set pattern length (up to 99 bars)"],
+  ["Steps & length","RECORD, then SHIFT + +","Duplicate the pattern and double its length"],
+  ["Steps & length","– / +  (stopped)","Step forward / back through the pattern"],
+  ["Steps & length","SHIFT + – / +","Move bar to bar"],
+  ["Steps & length","Hold SHIFT + pad, then – / +","Nudge that note's timing"],
+  ["Steps & length","Hold SHIFT + turn KNOB X","Set velocity of everything on the step"],
+  ["Steps & length","Hold SHIFT + turn KNOB Y","Set note length on the step"],
+  ["Keys","Select a pad, press KEYS","Play that sample across the pads like a keyboard"],
+  ["Keys","Hold KEYS + – / +","Change octave"],
+  ["Keys","Hold KEYS + a pad","Transpose — set the root note"],
+  ["Timing & groove","TIMING + turn KNOB X","Set the note interval (1/8, 1/16, triplets, 1/32…)"],
+  ["Timing & groove","TIMING + turn KNOB Y","Add swing (works on 1/8 and 1/16)"],
+  ["Timing & groove","TIMING, then – / +","Toggle quantize (–) vs free time (+)"],
+  ["Timing & groove","Hold TIMING + a pad","Note repeat — perfect for hi-hats"],
+  ["Timing & groove","TIMING, then SHIFT + pad","Latch note repeat on/off"],
+  ["Timing & groove","SHIFT + TIMING","Timing Correct — quantize one pad, leave the rest"],
+  ["Sampling","SAMPLE","Enter sample mode (the pads blink)"],
+  ["Sampling","Hold a pad (in Sample)","Record to it; let go to stop"],
+  ["Sampling","– / +  (in Sample)","Choose input: mic, line-in, resample, USB, L/R"],
+  ["Sampling","Hold SHIFT + pad (in Sample)","Hands-free — the unit holds the pad for you"],
+  ["Sampling","Hands-free, then PLAY","Resample the current pattern"],
+  ["Sampling","SAMPLE (while recording)","Stop a hands-free sample"],
+  ["Sampling","SHIFT + SAMPLE","Chop a sample across pads (auto or live)"],
+  ["Sampling","Hold SAMPLE + TEMPO","Detect incoming tempo and match the project to it"],
+  ["Sampling","MAIN (in Sample)","Exit sample mode"],
+  ["FX","FX (while playing)","Open the FX menu"],
+  ["FX","– / +  (in FX)","Choose the effect"],
+  ["FX","Move the FADER (in FX)","Set FX amount for the current group"],
+  ["FX","Hold FX + a group pad","Solo that group (hold several to solo several)"],
+  ["FX","Hold FX + pads","Punch-in FX — pressure-sensitive and combinable"],
+  ["FX","SHIFT + FX","Output / master-compressor settings"],
+  ["FX","SHIFT + FX, then +","Sidechain settings"],
+  ["Copy · erase · undo","SHIFT + GROUP C","Copy (once = bar, twice = pattern)"],
+  ["Copy · erase · undo","SHIFT + GROUP D","Paste"],
+  ["Copy · erase · undo","SHIFT + GROUP B","Undo (umbrella lights when it's available)"],
+  ["Copy · erase · undo","SHIFT + GROUP A","Jump to the next empty pattern"],
+  ["Copy · erase · undo","Hold ERASE + a pad","Erase notes on that pad — even while playing"],
+  ["Copy · erase · undo","Hold ERASE + a group pad","Erase the current pattern"],
+  ["Copy · erase · undo","Hold ERASE + MAIN (2 sec)","Clear or delete the current scene"],
+  ["Copy · erase · undo","Hold ERASE + SOUND","Permanently delete the selected sample"],
+  ["Copy · erase · undo","Hold ERASE + FADER","Erase the group's fader automation"],
+  ["Tempo & loop","TEMPO","Enter tempo mode"],
+  ["Tempo & loop","Tap TEMPO in rhythm","Tap tempo"],
+  ["Tempo & loop","Hold TEMPO + type a number","Set exact BPM (40–399; use · for decimals)"],
+  ["Tempo & loop","MAIN + TEMPO","Change the time signature"],
+  ["Tempo & loop","SHIFT + TEMPO","Drop a loop (OB-4 style) on the fly"],
+  ["Tempo & loop","Hold SHIFT + TEMPO","Set loop length — it ends when you let go"],
+  ["Fader","Hold FADER + a pad","Assign what the fader controls for this group"],
+  ["Fader","Hold a group pad + move FADER","Set that group's overall volume"],
+  ["Fader","SHIFT + FADER","Reset the fader's virtual position"],
+  ["System","SHIFT + ERASE","Open system settings"],
+  ["System","Type 301 + ENTER","Turn pad velocity ON (it's off by default)"],
+  ["System","Type 300 + ENTER","Turn pad velocity off"],
+  ["System","Type 400 + ENTER","Metronome on during record + play"],
+  ["System","Hold MAIN while powering on","Lock mode — blocks changes until you restart"],
+  ["System","Hold SHIFT + ERASE while powering on","Format the drive (fixes E.10–E.12; erases sounds)"],
+];
+
+const CTRL = {
+  shift:{name:"SHIFT",sub:"the modifier",color:"#8f8778",
+    blurb:"Held down, SHIFT unlocks a second function on almost every button — the small boxed label beneath it. It's the key to half the machine.",
+    combos:[["SHIFT + SOUND","Sound Edit"],["SHIFT + MAIN","Commit a scene"],["SHIFT + SAMPLE","Chop"],["SHIFT + TEMPO","Drop a loop"],["SHIFT + ERASE","System settings"],["SHIFT + GROUP B","Undo"]]},
+  sound:{name:"SOUND",sub:"assign & shape sounds",color:"#8f8778",
+    blurb:"Where you put a sample on a pad and shape it. Pick a group, pick a pad, then scroll samples with – / +. SHIFT+SOUND opens deep editing.",
+    combos:[["SOUND → group → pad","Choose a pad to load"],["– / +","Scroll samples"],["Hold SOUND + number","Load a specific sample"],["Hold a pad","Hear the sample's name"],["SHIFT + SOUND","Trim / envelope / time-stretch"]]},
+  main:{name:"MAIN",sub:"home base",color:"#8f8778",
+    blurb:"Your home screen — projects, scenes, patterns, recording and arranging all live here. Hold MAIN and the screen shows your scene (S.01…). When in doubt, press MAIN.",
+    combos:[["Hold MAIN + pad 1–9","Switch project (song)"],["Hold MAIN + pad 6–9","Empty project"],["Hold MAIN, then – / +","Pick a scene"],["SHIFT + MAIN","Commit"],["Hold MAIN + ENTER","Song editor"]]},
+  tempo:{name:"TEMPO",sub:"speed, loop & time-sig",color:"#8f8778",
+    blurb:"Set the BPM by knob, by typing, or by tapping. Also hides the loop performance tool and the time signature.",
+    combos:[["TEMPO + KNOB X","Set BPM"],["Tap TEMPO","Tap tempo"],["Hold TEMPO + number","Type exact BPM (40–399)"],["MAIN + TEMPO","Time signature"],["SHIFT + TEMPO","Loop"],["Hold SAMPLE + TEMPO","Match tempo to incoming audio"]]},
+  sample:{name:"SAMPLE",sub:"record sound in",color:"var(--orange)",
+    blurb:"Capture audio from the mic, the line-in (plug your guitar or phone in), or by resampling the unit itself. Hold a pad to record onto it; SHIFT+SAMPLE chops.",
+    combos:[["SAMPLE","Enter sample mode"],["Hold a pad","Record; release to stop"],["– / +","Pick the input source"],["Hold SHIFT + pad","Hands-free recording"],["SHIFT + SAMPLE","Chop across pads"],["MAIN","Exit"]]},
+  timing:{name:"TIMING",sub:"grid, swing & repeat",color:"#8f8778",
+    blurb:"Sets the sequencer's note interval and swing, switches quantize on/off, and does note repeat when you hold it with a pad.",
+    combos:[["TIMING + KNOB X","Note interval"],["TIMING + KNOB Y","Swing"],["TIMING, then – / +","Quantize vs free time"],["Hold TIMING + pad","Note repeat"],["SHIFT + TIMING","Quantize a single pad"]]},
+  keys:{name:"KEYS",sub:"play a sample melodically",color:"#8f8778",
+    blurb:"Turns the pads into a chromatic keyboard for the selected sample — the fast way to play basslines and melodies.",
+    combos:[["Select pad, press KEYS","Spread it across the pads"],["Hold KEYS + – / +","Octave"],["Hold KEYS + pad","Set the root note"]]},
+  fader:{name:"FADER",sub:"hands-on control",color:"#8f8778",
+    blurb:"By default it's group volume. Reassign it (level, filter, pitch, pan, FX send…) and record its movement for automation. The little pad labels — LPF, ATK, PAN… — are its possible destinations.",
+    combos:[["Hold FADER + pad","Assign what it controls"],["Hold RECORD + move it","Record automation"],["Hold group pad + move it","Group volume"],["SHIFT + FADER","Reset it"]]},
+  fx:{name:"FX",sub:"effects & punch-ins",color:"#8f8778",
+    blurb:"Delay, reverb, distortion, chorus, filter, compressor — one per group via the fader. Hold FX and hit pads for live punch-in FX. SHIFT+FX is the master output.",
+    combos:[["FX (playing)","Open FX"],["– / +","Choose the effect"],["Move FADER","FX amount"],["Hold FX + group","Solo it"],["Hold FX + pads","Punch-in FX"],["SHIFT + FX","Master compressor"]]},
+  erase:{name:"ERASE",sub:"remove & undo territory",color:"#e9e7e0",
+    blurb:"Removes notes, patterns, scenes or samples depending on what you hold it with. SHIFT+ERASE is the door to system settings.",
+    combos:[["Hold ERASE + pad","Erase that pad's notes"],["Hold ERASE + group","Erase the pattern"],["Hold ERASE + MAIN (2s)","Clear the scene"],["Hold ERASE + SOUND","Delete the sample"],["SHIFT + ERASE","System settings"]]},
+  groupa:{name:"GROUP A",sub:"suggested: drums",color:"var(--gA)",
+    blurb:"One of four groups — think of each as an instrument with its own 12 pads and patterns. A is the natural home for drums. The red tag is how it shows on the screen. Under SHIFT it's also 'next empty pattern'.",
+    combos:[["Press A","Select the group"],["Hold A + – / +","Choose its pattern"],["SHIFT + A","Next empty pattern"],["Hold FX + A","Solo drums"]]},
+  groupb:{name:"GROUP B",sub:"suggested: bass",color:"var(--gB)",
+    blurb:"Second group — a good home for bass. Shows amber on the screen. Under SHIFT, GROUP B is your Undo button.",
+    combos:[["Press B","Select the group"],["Hold B + – / +","Choose its pattern"],["SHIFT + B","Undo"],["Hold FX + B","Solo bass"]]},
+  groupc:{name:"GROUP C",sub:"suggested: melody",color:"var(--gC)",
+    blurb:"Third group — melodies and chords. Shows magenta on the screen. Under SHIFT, GROUP C is Copy.",
+    combos:[["Press C","Select the group"],["Hold C + – / +","Choose its pattern"],["SHIFT + C","Copy (bar / pattern)"],["Hold FX + C","Solo melody"]]},
+  groupd:{name:"GROUP D",sub:"suggested: your samples",color:"var(--gD)",
+    blurb:"Fourth group — keep it empty for the sounds you sample yourself. Shows blue on the screen. Under SHIFT, GROUP D is Paste.",
+    combos:[["Press D","Select the group"],["Hold D + – / +","Choose its pattern"],["SHIFT + D","Paste"],["Hold FX + D","Solo samples"]]},
+  knobx:{name:"KNOB X",sub:"orange · gain / BPM",color:"var(--orange)",
+    blurb:"The context knob, sitting above SAMPLE. Its job changes per mode — BPM in tempo, note interval in timing, cutoff/drive in FX, amplitude in sound. Hold SHIFT while turning for fine control.",
+    combos:[["In Tempo","BPM"],["In Timing","Note interval"],["In FX","First FX parameter"],["In Sound","Amplitude"],["Hold SHIFT + turn","Fine adjust"]]},
+  knoby:{name:"KNOB Y",sub:"metronome · swing",color:"#8f8778",
+    blurb:"The second context knob, above TIMING. Swing in timing, feedback/color in FX, pitch in sound, metronome volume in tempo. Hold SHIFT for fine control.",
+    combos:[["In Timing","Swing"],["In FX","Second FX parameter"],["In Sound","Pitch"],["In Tempo","Metronome volume"],["Hold SHIFT + turn","Fine adjust"]]},
+  volume:{name:"VOLUME",sub:"master output",color:"#8f8778",
+    blurb:"Top-left knob — overall output level to the speaker and the output jack. Not part of any combo.",combos:[]},
+  minus:{name:"MINUS  –",sub:"navigate down",color:"#e9e7e0",
+    blurb:"With PLUS, the most-used pair on the unit: step through the sequencer, switch scenes and patterns, browse sounds and FX, nudge notes, change tempo.",
+    combos:[["– (stopped)","Previous step"],["Hold MAIN + –","Previous scene"],["Hold RECORD + –","Shorten pattern"],["SHIFT + –","Previous bar"]]},
+  plus:{name:"PLUS  +",sub:"navigate up",color:"#e9e7e0",
+    blurb:"With MINUS, your main navigator: steps, scenes, patterns, sounds, FX, tempo and note nudging all run through it.",
+    combos:[["+ (stopped)","Next step"],["Hold MAIN + +","Next scene"],["Hold RECORD + +","Lengthen pattern"],["SHIFT + +","Next bar"]]},
+  record:{name:"RECORD",sub:"capture",color:"var(--orange)",
+    blurb:"Arms recording. Tap it then PLAY for a counted-in live take, hit both together to skip the count, or hold it with a pad to place steps by hand.",
+    combos:[["Tap RECORD, then PLAY","Live, with count-in"],["RECORD + PLAY","Live, no count-in"],["Hold RECORD + pad","Step-record"],["Hold RECORD + – / +","Pattern length"]]},
+  play:{name:"PLAY",sub:"start / stop",color:"#9a968c",
+    blurb:"Starts and stops playback, bottom-right. Also the second half of most record moves.",
+    combos:[["PLAY","Start / stop"],["RECORD, then PLAY","Record with count-in"],["SHIFT + PLAY","Play song from start"]]},
+  enter:{name:"ENTER",sub:"confirm",color:"#8f8778",
+    blurb:"Confirms typed values — sample numbers, system codes, tempo. Held with MAIN it opens the song editor.",
+    combos:[["Type a code + ENTER","Confirm it"],["Hold MAIN + ENTER","Song editor"]]},
+  pad:{name:"PADS  1–9, 0, ·",sub:"sounds + number pad",color:"#8f8778",
+    blurb:"The 12 pads play your sounds and double as a number pad for typing values. The tiny labels around them (LEVEL, LPF, ATK, PAN…) are the fader destinations you can assign with FADER + pad.",
+    combos:[["Tap a pad","Play its sound"],["Hold RECORD + pad","Step-record it"],["Hold ERASE + pad","Erase its notes"],["Hold FADER + pad","Assign the fader"],["Type digits","Enter a number"]]},
+};
+["pad0","pad1","pad2","pad3","pad4","pad5","pad6","pad7","pad8","pad9","paddot"].forEach(k=>CTRL[k]=CTRL.pad);
+
+const RECIPES = [
+  {t:"Your first beat, live",s:"New project to a committed loop in a minute",
+   steps:[["Hold <span class='cmd'>MAIN + pad 6</span> for a clean, empty project."],
+     ["Press <span class='cmd'>SOUND</span>, pick <b>GROUP A</b>, tap a pad, and dial in a kick with <span class='cmd'>– / +</span>. Fill a few pads with drums."],
+     ["Press <span class='cmd'>MAIN</span>. Tap <span class='cmd'>RECORD</span> then <span class='cmd'>PLAY</span> — you'll hear a 4-beat count-in."],
+     ["Play the pads to punch out a beat. Press <span class='cmd'>PLAY</span> to stop."],
+     ["Happy with it? <span class='cmd'>SHIFT + MAIN</span> to commit it as a scene."]],
+   tip:"Pads feel flat? Velocity ships <b>off</b>. Turn it on: <span class='cmd'>SHIFT + ERASE</span>, type <b>301</b>, ENTER."},
+  {t:"Program drums by step",s:"Place hits exactly, no timing skills needed",
+   steps:[["In <b>MAIN</b>, hold <span class='cmd'>SHIFT + –</span> until the screen reads <b>1.1.1</b> — step one."],
+     ["Hold <span class='cmd'>RECORD + a pad</span> to drop that sound on the step. It lights up."],
+     ["Kick on <b>1.1.1 / 1.2.1 / 1.3.1 / 1.4.1</b> is a four-on-the-floor."],
+     ["Snare on <b>1.2.1</b> and <b>1.4.1</b> is the backbeat."],
+     ["For fast hats, hold <span class='cmd'>TIMING + a pad</span> to note-repeat them in."]],
+   tip:"Set the grid first: <span class='cmd'>TIMING + KNOB X</span> for the note interval, <span class='cmd'>KNOB Y</span> for swing."},
+  {t:"Sample your guitar",s:"Get a riff off the strings and into a pad",
+   steps:[["Plug into the <b>3.5 mm input</b> (or just use the built-in mic)."],
+     ["Select <b>GROUP D</b>, press <span class='cmd'>SAMPLE</span> — the pads blink."],
+     ["Press <span class='cmd'>– / +</span> to choose <b>line-in</b>. Set the level with <span class='cmd'>KNOB X</span>."],
+     ["Hold an empty pad and play your riff. Release to stop; tap the pad to hear it."],
+     ["Press <span class='cmd'>MAIN</span> to drop back and sequence it like any other sound."]],
+   tip:"Want it in time with your track? Hold <span class='cmd'>SAMPLE + TEMPO</span> and play — it'll detect the tempo and match the project."},
+  {t:"Chop a loop into pieces",s:"Turn a break or phrase into playable slices",
+   steps:[["Get a loop onto a pad (sample it or import it)."],
+     ["Press <span class='cmd'>SHIFT + SAMPLE</span> to enter Chop."],
+     ["Pick an <b>empty group</b> to hold the slices (this overwrites that group's pads)."],
+     ["<b>Auto-chop:</b> <span class='cmd'>– / +</span> sets how many slices; it detects the beats for you."],
+     ["<b>Live chop:</b> tap pads in time as it plays to place cuts by hand."],
+     ["Fine-tune any slice's start/end with <span class='cmd'>KNOB X / Y</span> (hold SHIFT for fine control)."]],
+   tip:"Play the slices out of order until something grooves — that's where the magic usually hides."},
+  {t:"Build a song with commit",s:"Stack sections without stopping the music",
+   steps:[["Get a loop you like playing."],
+     ["<span class='cmd'>SHIFT + MAIN</span> — commit. It freezes that scene and hands you a duplicate."],
+     ["Change something on the copy: add a fill, mute a part, drop in a new sound."],
+     ["Commit again. Repeat to stack intro → verse → chorus as separate scenes."],
+     ["Hold <span class='cmd'>MAIN + ENTER</span> for the song editor and chain the scenes into order."]],
+   tip:"Commit is not 'save to disk' — the unit auto-saves. It's 'snapshot this and give me a fresh copy to mess with.'"},
+  {t:"Add movement with FX",s:"Punch-ins and automation for life and variation",
+   steps:[["Press <span class='cmd'>FX</span> while playing, then <span class='cmd'>– / +</span> to pick delay, reverb, filter…"],
+     ["Raise the <b>FADER</b> to send the current group into it."],
+     ["Now hold <span class='cmd'>FX + pads</span> to punch effects in live — pressure-sensitive, and you can stack them."],
+     ["To keep a move, hold <span class='cmd'>RECORD</span> while you do it — the fader/FX gets recorded in."]],
+   tip:"Hold <span class='cmd'>FX + a group pad</span> to solo it while you dial the effect in on just that part."},
+];
+
+const FIXES = [
+  {p:"My pads ignore how hard I hit them",c:"Velocity sensitivity is off from the factory.",
+   d:"<span class='cmd'>SHIFT + ERASE</span>, type <b>301</b>, press <b>ENTER</b>. (300 turns it back off.)"},
+  {p:"Hold MAIN shows a scene, not my project",c:"That's correct — holding MAIN lands on scenes.",
+   d:"– / + moves scenes <i>within</i> a song. To change songs, hold <span class='cmd'>MAIN + tap a number pad 1–9</span>."},
+  {p:"I made a mistake — can I take it back?",c:"There's a single level of undo.",
+   d:"<span class='cmd'>SHIFT + GROUP B</span>. The umbrella icon on screen lights up when an undo is available."},
+  {p:"There's a wrong note in my pattern",c:"You can pull individual hits without re-recording.",
+   d:"Hold <span class='cmd'>ERASE + that pad</span> — works while playing. Hold several pads to clear several at once."},
+  {p:"I recorded junk over a whole part",c:"You can wipe a pattern or overwrite as you go.",
+   d:"Wipe it: hold <span class='cmd'>ERASE + the group pad</span>. Or re-record over it: <span class='cmd'>RECORD, ERASE, +</span>."},
+  {p:"A sample won't go away",c:"Samples live in one global library, not on the pad.",
+   d:"In <b>SOUND</b> mode, select it, then hold <span class='cmd'>ERASE + SOUND</span> to delete it from the device for good."},
+  {p:"Where did my sample even go?",c:"Every recording auto-saves to the next free slot.",
+   d:"In <b>SOUND</b>, hold <span class='cmd'>SOUND</span> and type its number, or scroll with <span class='cmd'>– / +</span> to find it."},
+  {p:"The screen shows E.10, E.11 or E.12",c:"File-system error — the drive needs formatting.",
+   d:"Power off. Hold <span class='cmd'>SHIFT + ERASE</span> while powering on to format (this erases sounds). Then update the OS."},
+  {p:"The screen shows E.01, E.02 or E.03",c:"Hardware fault (SRAM / flash / codec).",
+   d:"This one isn't a settings fix — the unit needs servicing by Teenage Engineering."},
+  {p:"Nothing I press does anything",c:"You're probably in Lock mode.",
+   d:"Lock mode switches on if <b>MAIN</b> is held at power-up ('LOK' flashes). Just restart the unit to clear it."},
+  {p:"The tempo knob won't reach my BPM",c:"The knob only spans part of the range.",
+   d:"Hold <span class='cmd'>TEMPO</span> and type the number for the full <b>40–399</b> range. Use <b>·</b> for decimals."},
+  {p:"I want a totally clean slate",c:"You don't have to erase anything to start fresh.",
+   d:"Hold <span class='cmd'>MAIN + a pad 6–9</span> for a factory-empty project. Your other projects stay untouched."},
+];
+
+/* ---- render ---- */
+const hints={map:"tap a control",combos:"search shortcuts",learn:"follow along",stuck:"quick fixes"};
+const scrHint=document.getElementById('scr-hint');
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    const go=t.dataset.go;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+    ['map','combos','learn','stuck'].forEach(id=>document.getElementById(id).hidden=(id!==go));
+    scrHint.textContent=hints[go]; window.scrollTo(0,0);
+  });
+});
+
+const sheet=document.getElementById('sheet'),scrim=document.getElementById('scrim'),sbody=document.getElementById('sheet-body');
+function openSheet(id){
+  const c=CTRL[id]; if(!c) return;
+  let h=`<div class="stag"><span class="swatch" style="background:${c.color}"></span>control</div>`;
+  h+=`<h2>${c.name}</h2><div class="ssub mono">${c.sub}</div><div class="sblurb">${c.blurb}</div>`;
+  if(c.combos&&c.combos.length){h+=`<div class="scmb">combos</div>`;
+    c.combos.forEach(([k,a])=>h+=`<div class="combo"><div class="k">${k}</div><div class="a">${a}</div></div>`);}
+  sbody.innerHTML=h; sheet.classList.add('on'); scrim.classList.add('on');
+}
+function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');}
+scrim.addEventListener('click',closeSheet);
+document.querySelectorAll('.device .key').forEach(k=>{
+  if(k.hasAttribute('data-noop'))return;
+  k.addEventListener('click',()=>openSheet(k.dataset.id));
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+const devNum=document.getElementById('dev-num');
+document.querySelector('.device').addEventListener('click',()=>{
+  const s=['S.01','S.02','1.1.1','1.2.3','2.1.1'];devNum.textContent=s[Math.floor(Math.random()*s.length)];
+});
+
+const cats=[...new Set(COMBOS.map(c=>c[0]))]; let activeCat='All';
+const chipsEl=document.getElementById('chips');
+['All',...cats].forEach(cat=>{
+  const b=document.createElement('button');b.className='chip'+(cat==='All'?' on':'');b.textContent=cat;
+  b.addEventListener('click',()=>{activeCat=cat;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));renderCombos();});
+  chipsEl.appendChild(b);
+});
+const qEl=document.getElementById('q'),listEl=document.getElementById('combo-list');
+qEl.addEventListener('input',renderCombos);
+function renderCombos(){
+  const q=qEl.value.trim().toLowerCase();
+  let rows=COMBOS.filter(([cat,k,a])=>(activeCat==='All'||cat===activeCat)&&(!q||(cat+' '+k+' '+a).toLowerCase().includes(q)));
+  if(!rows.length){listEl.innerHTML=`<div class="empty">Nothing matches "${qEl.value}". Try a plainer word — a button name, or what you want to do.</div>`;return;}
+  let h='',cur='';rows.forEach(([cat,k,a])=>{if(cat!==cur){h+=`<div class="cathead">${cat}</div>`;cur=cat;}h+=`<div class="combo"><div class="k">${k}</div><div class="a">${a}</div></div>`;});
+  listEl.innerHTML=h;
+}
+renderCombos();
+
+const rl=document.getElementById('recipe-list');
+RECIPES.forEach((r,i)=>{
+  const el=document.createElement('div');el.className='recipe';
+  const steps=r.steps.map((s,j)=>`<div class="step"><div class="sn">${j+1}</div><div class="sx">${s[0]}</div></div>`).join('');
+  el.innerHTML=`<button aria-expanded="false"><span class="rnum">${String(i+1).padStart(2,'0')}</span><span><span class="rt">${r.t}</span><div class="rs">${r.s}</div></span><span class="caret">›</span></button><div class="steps">${steps}<div class="tip">💡&nbsp;<div>${r.tip}</div></div></div>`;
+  el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
+  rl.appendChild(el);
+});
+
+const fl=document.getElementById('fix-list');
+FIXES.forEach(f=>{
+  const el=document.createElement('div');el.className='fix';
+  el.innerHTML=`<button aria-expanded="false"><span>${f.p}</span><span class="caret">›</span></button><div class="body"><div class="cause">${f.c}</div><div class="do">${f.d}</div></div>`;
+  el.querySelector('button').addEventListener('click',()=>{const o=el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',o);});
+  fl.appendChild(el);
+});
+</script>
+</body>
+</html>
